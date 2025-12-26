@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -31,7 +31,11 @@ namespace NervanaNcMgd.Functions
         private MgdExplorerReflection()
         {
             mConfig = (MgdExplorerReflectionConfig?)IConfigBase.LoadFrom<MgdExplorerReflectionConfig>(null);
-            if (mConfig == null) mConfig = new MgdExplorerReflectionConfig();
+            if (mConfig == null) 
+            {
+                mConfig = new MgdExplorerReflectionConfig();
+                mConfig.Save();
+            }
             p_Classes = new List<Type>();
 
             InitTypes();
