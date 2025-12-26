@@ -1,0 +1,11 @@
+[book]
+authors = ["GeorgGrebenyuk"]
+language = "en"
+multilingual = false
+src = "src"
+title = "NervanaGuide"
+
+[output.html]
+
+[output.html.print]
+enable = true
