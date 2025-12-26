@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UI_Creator_FromCSV_Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Modes>
+    <CreationMode>WithClassicMenu</CreationMode>
+  </Modes>
+  <IconsRefPath_or_DLL>icons</IconsRefPath_or_DLL>
+  <IconResVariant>LocalFile</IconResVariant>
+  <IconFormatVariant>ICO</IconFormatVariant>
+  <RibbonName>Nervana</RibbonName>
+  <CSV_FilePath>NervanaCommands.txt</CSV_FilePath>
+  <CSV_Separator>9</CSV_Separator>
+  <CSV_SkipHeader>true</CSV_SkipHeader>
+  <DeleteCUIXFiles>true</DeleteCUIXFiles>
+  <DeleteConfigFiles>false</DeleteConfigFiles>
+  <PlaceLargeWithoutTextIconsEconomy>true</PlaceLargeWithoutTextIconsEconomy>
+</UI_Creator_FromCSV_Config>

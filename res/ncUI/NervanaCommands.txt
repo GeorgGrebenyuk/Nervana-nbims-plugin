@@ -1,0 +1,7 @@
+Имя команды	Внутреннее имя	Описание	Подпункт	Размер в ленте	RibbonSplitButton
+Обозреатель объектов	Nervana_MgdExplorerReflectionEntities	Обзор свойств классов выбранных объектов чертежа в отдельном окне	Утилиты	LargeWithText	Обозреватель Reflection
+Обозреатель объектов2	Nervana_MgdExplorerReflectionEntities2	Обзор свойств классов выбранных объектов чертежа на палитре	Утилиты	LargeWithText	Обозреватель Reflection
+Обозреватель приложения	Nervana_MgdExplorerReflectionApplication	Обзор свойств класса приложения nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
+Обозреватель моделей	Nervana_MgdExplorerReflectionDocuments	Обзор свойств класса коллекции открытых документов nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
+Обозреватель модели	Nervana_MgdExplorerReflectionDocument	Обзор свойств активного документа (модели) nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
+Обозреватель БД модели	Nervana_MgdExplorerReflectionDatabase	Обзор свойств активной Базы данных документа (модели) nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection

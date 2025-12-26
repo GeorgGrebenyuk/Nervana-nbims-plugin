@@ -267,9 +267,10 @@ __pycache__/
 external
 
 # res
-res
 NervanaGuide.zip
 
 # Mdbook compilation result
 docs/book
 docs/NervanaGuide.pdf
+res/ncUI/NC_UI_DEF.cfg
+res/ncUI/NC_UI_DEF.cuix

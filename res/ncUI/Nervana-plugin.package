@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ApplicationPackage
+  xmlns="hostApplicationPackage/v01"
+  Name="Nervana-plugin"
+ >
+  <Components>
+    <ConfigEntry
+      FileName="NC_UI_DEF.cfg"
+      FileType="CFG"
+    />
+    <ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="NervanaCommonMgd.dll"
+        ModuleType="MGD"
+    />
+	<ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="NervanaNcMgd.dll"
+        ModuleType="MGD"
+    />
+	<ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="NervanaNcComMgd.dll"
+        ModuleType="MGD"
+    />
+	<ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="NervanaNcBIMsMgd.dll"
+        ModuleType="MGD"
+    />
+  </Components>
+</ApplicationPackage>
