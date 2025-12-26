@@ -7,18 +7,18 @@
         mc:Ignorable="d"
         Title="Обозреватель классов" >
 	<Window.Resources>
-		<Image x:Key="MgdExplR_UI_Copy" Source="../Resources/MgdExplR_UI_Copy.ico"/>
-		<Image x:Key="MgdExplR_UI_Copy_All" Source="../Resources/MgdExplR_UI_Copy_All.ico"/>
+		<Image x:Key="MgdExplR_UI_Copy" Source="/NervanaNcMgd;component/Resources/MgdExplR_UI_Copy.ico"/>
+		<Image x:Key="MgdExplR_UI_Copy_All" Source="/NervanaNcMgd;component/Resources/MgdExplR_UI_Copy_All.ico"/>
 		<Style TargetType="ListViewItem">
 			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 		</Style>
 	</Window.Resources>
 	
-	<Grid Background="White">
+	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="40" />
-			<ColumnDefinition Width="Auto" MinWidth="300" />
-			<ColumnDefinition Width ="*"/>
+			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width ="6*"/>
 		</Grid.ColumnDefinitions>
 		<StackPanel  Grid.Column="0">
 			<Button 
