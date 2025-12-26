@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "nc 25.0": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Nanosoft\\nanoCAD x64 25.0\\nCad.exe",
+      "commandLineArgs": "-g $(TargetDir)Nervana-plugin.package"
+    }
+  }
+}
