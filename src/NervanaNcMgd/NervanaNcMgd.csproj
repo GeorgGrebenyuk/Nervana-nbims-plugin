@@ -14,8 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\MgdExplR_UI_Copy.ico" />
-    <None Remove="Resources\MgdExplR_UI_Copy_All.ico" />
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+    <Page Remove="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,17 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Remove="Resources\MgdExplR_UI_Copy.ico" />
-    <None Remove="Resources\MgdExplR_UI_Copy_All.ico" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Resource Include="Resources\MgdExplR_UI_Copy.ico" />
-    <Resource Include="Resources\MgdExplR_UI_Copy_All.ico" />
   </ItemGroup>
 
   <ItemGroup>
