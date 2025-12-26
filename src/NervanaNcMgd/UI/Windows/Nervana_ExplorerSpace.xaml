@@ -7,50 +7,28 @@
         mc:Ignorable="d"
         Title="Обозреватель классов" >
 	<Window.Resources>
-		<Image x:Key="MgdExplR_UI_Copy" Source="/NervanaNcMgd;component/Resources/MgdExplR_UI_Copy.ico"/>
-		<Image x:Key="MgdExplR_UI_Copy_All" Source="/NervanaNcMgd;component/Resources/MgdExplR_UI_Copy_All.ico"/>
 		<Style TargetType="ListViewItem">
 			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 		</Style>
 	</Window.Resources>
 	
-	<Grid>
+	<Grid Margin="5">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="40" />
 			<ColumnDefinition Width="2*" />
 			<ColumnDefinition Width ="6*"/>
 		</Grid.ColumnDefinitions>
-		<StackPanel  Grid.Column="0">
-			<Button 
-				x:Name="Button_CopySingle" 
-				Width="32" 
-				Height="32" 
-				Margin="0,30,0,0" 
-				Content="{StaticResource MgdExplR_UI_Copy}" >
-			</Button>
-			<Button 
-			x:Name="Button_CopyAll" 
-			Width="32" 
-			Height="32" 
-			Margin="0,5,0,0" 
-			Content="{StaticResource MgdExplR_UI_Copy_All}" >
-			</Button>
+		<GroupBox Header="Анализируемые данные:">
+			<TreeView
+				Grid.Column="0"
+				x:Name="TreeView_SourceData"
+				ScrollViewer.HorizontalScrollBarVisibility="Visible"
+				ScrollViewer.VerticalScrollBarVisibility="Visible"
+				TreeViewItem.Selected="TreeView_AfterSelect"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"/>
+		</GroupBox>
 
-		</StackPanel>
-		<Label 
-			Grid.Column="1"
-			x:Name="Label_TreeData"
-			Content="Анализируемые данные:"></Label>
-		<TreeView
-			Grid.Column="1"
-			Margin="0,30,0,0"
-			x:Name="TreeView_SourceData"
-			ScrollViewer.HorizontalScrollBarVisibility="Visible"
-			ScrollViewer.VerticalScrollBarVisibility="Visible"
-			TreeViewItem.Selected="TreeView_AfterSelect"
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"/>
-		<GroupBox Header="Информация об объекте:" x:Name="GroupBoxForListView" Grid.Column="3" Margin="10,5,10,0">
+		<GroupBox Header="Информация об объекте:" x:Name="GroupBoxForListView" Grid.Column="1">
 
 		</GroupBox>
 		
