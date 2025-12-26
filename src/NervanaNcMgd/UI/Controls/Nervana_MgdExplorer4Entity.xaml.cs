@@ -30,17 +30,20 @@ namespace NervanaNcMgd.UI.Controls
     public partial class Nervana_MgdExplorer4Entity : UserControl
     {
         private MgdExplorerReflection_Handler _handler;
-        public Nervana_MgdExplorer4Entity()
+        public Nervana_MgdExplorer4Entity(bool asPalette = false)
         {
             InitializeComponent();
 
-            DocumentCollection dm = Platform.ApplicationServices.Application.DocumentManager;
-            dm.MdiActiveDocument.ImpliedSelectionChanged -= new EventHandler(callback_SelectionChanged);
-            dm.MdiActiveDocument.ImpliedSelectionChanged += new EventHandler(callback_SelectionChanged);
+            if (asPalette)
+            {
+                DocumentCollection dm = Platform.ApplicationServices.Application.DocumentManager;
+                dm.MdiActiveDocument.ImpliedSelectionChanged -= new EventHandler(callback_SelectionChanged);
+                dm.MdiActiveDocument.ImpliedSelectionChanged += new EventHandler(callback_SelectionChanged);
 
-            dm.DocumentToBeDestroyed += new DocumentCollectionEventHandler(callback_DocumentToBeDestroyed);
-            dm.DocumentBecameCurrent += new DocumentCollectionEventHandler(callback_DocumentBecameCurrent);
+                dm.DocumentToBeDestroyed += new DocumentCollectionEventHandler(callback_DocumentToBeDestroyed);
+                dm.DocumentBecameCurrent += new DocumentCollectionEventHandler(callback_DocumentBecameCurrent);
 
+            }
             _handler = new MgdExplorerReflection_Handler(null);
         }
 
@@ -76,7 +79,7 @@ namespace NervanaNcMgd.UI.Controls
             onUpdate(data);
         }
 
-        private void onUpdate(object? data)
+        public void onUpdate(object? data)
         {
             _handler = new MgdExplorerReflection_Handler(data);
             if (_handler.Items.Count > 0) setObjectToView(_handler.GetData(0));

@@ -26,7 +26,7 @@ namespace NervanaNcMgd.Functions
                     
                     AutoSize = false,
                     Dock  = System.Windows.Forms.DockStyle.Fill,
-                    Child = new Nervana_MgdExplorer4Entity()
+                    Child = new Nervana_MgdExplorer4Entity(true)
                 };
 
                 //use constructor with Guid so that we can save/load user data
