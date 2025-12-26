@@ -1,4 +1,4 @@
-﻿using NervanaNcMgd.UI.Windows;
+using NervanaNcMgd.UI.Windows;
 using System;
 using System.Collections;
 using System.Collections.Generic;

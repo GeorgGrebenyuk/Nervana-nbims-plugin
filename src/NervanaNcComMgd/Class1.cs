@@ -1,4 +1,4 @@
-﻿namespace NervanaNcComMgd
+namespace NervanaNcComMgd
 {
     public class Class1
     {

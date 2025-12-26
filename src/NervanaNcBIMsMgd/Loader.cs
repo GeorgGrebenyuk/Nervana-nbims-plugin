@@ -1,4 +1,4 @@
-﻿namespace NervanaNcBIMsMgd
+namespace NervanaNcBIMsMgd
 {
     public class Loader
     {
