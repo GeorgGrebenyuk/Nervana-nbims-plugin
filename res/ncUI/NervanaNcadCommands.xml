@@ -7,10 +7,12 @@
   <IconResVariant>LocalFile</IconResVariant>
   <IconFormatVariant>ICO</IconFormatVariant>
   <RibbonName>Nervana</RibbonName>
-  <CSV_FilePath>NervanaCommands.txt</CSV_FilePath>
+  <CSV_FilePath>NervanaNcadCommands.txt</CSV_FilePath>
   <CSV_Separator>9</CSV_Separator>
   <CSV_SkipHeader>true</CSV_SkipHeader>
   <DeleteCUIXFiles>true</DeleteCUIXFiles>
   <DeleteConfigFiles>false</DeleteConfigFiles>
   <PlaceLargeWithoutTextIconsEconomy>true</PlaceLargeWithoutTextIconsEconomy>
+  <CfgName>NervanaNcadCommands.cfg</CfgName>
+  <CuixName>NervanaNcadCommands.cuix</CuixName>
 </UI_Creator_FromCSV_Config>

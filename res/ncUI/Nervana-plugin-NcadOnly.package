@@ -6,7 +6,7 @@
  >
   <Components>
     <ConfigEntry
-      FileName="NervanaAllCommands.cfg"
+      FileName="NervanaNcadCommands.cfg"
       FileType="CFG"
     />
     <ComponentEntry
@@ -17,16 +17,6 @@
 	<ComponentEntry
         AppName="Nervana-plugin"
         ModuleName="NervanaNcMgd.dll"
-        ModuleType="MGD"
-    />
-	<ComponentEntry
-        AppName="Nervana-plugin"
-        ModuleName="NervanaNcComMgd.dll"
-        ModuleType="MGD"
-    />
-	<ComponentEntry
-        AppName="Nervana-plugin"
-        ModuleName="NervanaNcBIMsMgd.dll"
         ModuleType="MGD"
     />
   </Components>
