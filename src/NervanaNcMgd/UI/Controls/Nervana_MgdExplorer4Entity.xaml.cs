@@ -49,12 +49,12 @@ namespace NervanaNcMgd.UI.Controls
 
         private void callback_DocumentToBeDestroyed(object sender, DocumentCollectionEventArgs e)
         {
-            setObjectToView(null);
+            setObjectToView(null, null);
         }
 
         private void callback_DocumentBecameCurrent(object sender, DocumentCollectionEventArgs e)
         {
-            setObjectToView(null);
+            setObjectToView(null, null);
         }
 
 
@@ -78,7 +78,7 @@ namespace NervanaNcMgd.UI.Controls
             }
 
             _handler = new MgdExplorerReflection_Handler(data);
-            if (_handler.Items.Count > 0) setObjectToView(_handler.GetData(0));
+            if (_handler.Items.Count > 0) setObjectToView(null, _handler.GetData(0));
         }
 
         //public void onUpdate(object? data)
@@ -87,8 +87,10 @@ namespace NervanaNcMgd.UI.Controls
         //    if (_handler.Items.Count > 0) setObjectToView(_handler.GetData(0));
         //}
 
-        internal void setObjectToView(EParametersGroup[]? data)
+        internal void setObjectToView(MgdExplorerReflection_Handler? handler, EParametersGroup[]? data)
         {
+            if (handler != null) this._handler = handler;
+
             this.ListView_Info.Items.Clear();
             int i_counter = 0;
             if (data == null) return;

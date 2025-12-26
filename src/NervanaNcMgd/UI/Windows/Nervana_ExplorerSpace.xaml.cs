@@ -56,7 +56,6 @@ namespace NervanaNcMgd.UI.Windows
                 TreeViewItem item = new TreeViewItem();
                 item.Header = pseudoTreeItemDef.Name;
                 item.Tag = pseudoTreeItemDef.Tag;
-                //TODO: Set style
 
                 this.TreeView_SourceData.Items.Add(item);
                 setChildElementsFrom(pseudoTreeItemDef, item);
@@ -83,7 +82,7 @@ namespace NervanaNcMgd.UI.Windows
 
         private void setObjectToView(EParametersGroup[]? data)
         {
-            _listview.setObjectToView(data);
+            _listview.setObjectToView(_handler, data);
         }
 
         private void TreeView_AfterSelect(object sender, RoutedEventArgs e)
