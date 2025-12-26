@@ -26,7 +26,6 @@
 				Width="32" 
 				Height="32" 
 				Margin="0,30,0,0" 
-				Click="Button_CopySingle_Click" 
 				Content="{StaticResource MgdExplR_UI_Copy}" >
 			</Button>
 			<Button 
@@ -34,7 +33,6 @@
 			Width="32" 
 			Height="32" 
 			Margin="0,5,0,0" 
-			Click="Button_CopyAll_Click" 
 			Content="{StaticResource MgdExplR_UI_Copy_All}" >
 			</Button>
 
@@ -52,48 +50,9 @@
 			TreeViewItem.Selected="TreeView_AfterSelect"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"/>
-		<Label
-			Grid.Column="2"
-			x:Name="Label_ObjectInfo"
-			Content="Информация об объекте:" 
-			Margin="10,0,0,0"></Label>
-		<ListView
-			Grid.Column="3"
-			Margin="10,30,10,0"
-			x:Name="ListView_Info"
-			SelectionChanged="ListView_SelectionChanged">
-			<ListView.View>
-				<GridView>
-					<GridViewColumn DisplayMemberBinding="{Binding Path=Caption}" Width="Auto" Header="Name"></GridViewColumn>
-					<GridViewColumn DisplayMemberBinding="{Binding Path=Value}" Width="Auto" Header="Value"></GridViewColumn>
-				</GridView>
-			</ListView.View>
-			<ListView.ItemContainerStyle>
-				<Style TargetType="ListViewItem">
-					<!-- Base style -->
-					<Setter Property="Background" Value="White"/>
-					<Setter Property="Foreground" Value="Black"/>
+		<GroupBox Header="Информация об объекте:" x:Name="GroupBoxForListView" Grid.Column="3" Margin="10,5,10,0">
 
-					<!-- Style based on CanDeep field -->
-					<Style.Triggers>
-						<DataTrigger Binding="{Binding CanDeep}" Value="Cat">
-							<Setter Property="Background" Value="#D4D4D4"/>
-						</DataTrigger>
-						<DataTrigger Binding="{Binding CanDeep}" Value="+">
-							<Setter Property="Background" Value="#D9FFC9"/>
-							<Setter Property="FontWeight" Value="Bold"/>
-						</DataTrigger>
-						<DataTrigger Binding="{Binding VType}" Value="NotImplemented">
-							<Setter Property="Background" Value="#FC8200"/>
-							<Setter Property="FontStyle" Value="Italic"/>
-						</DataTrigger>
-						<DataTrigger Binding="{Binding VType}" Value="NotApplicable">
-							<Setter Property="Background" Value="#FC0000"/>
-							<Setter Property="FontStyle" Value="Italic"/>
-						</DataTrigger>
-					</Style.Triggers>
-				</Style>
-			</ListView.ItemContainerStyle>
-		</ListView>
+		</GroupBox>
+		
 	</Grid>
 </Window>

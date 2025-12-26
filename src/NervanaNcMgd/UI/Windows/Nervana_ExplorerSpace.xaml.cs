@@ -19,6 +19,7 @@ using HostMgd.ApplicationServices;
 using Platform = HostMgd;
 using NativePlatform = Teigha;
 using HostMgd.EditorInput;
+using NervanaNcMgd.UI.Controls;
 
 namespace NervanaNcMgd.UI.Windows
 {
@@ -33,18 +34,13 @@ namespace NervanaNcMgd.UI.Windows
         private Style p_ListViewStyle_Common;
         private Style p_ListViewStyle_Category;
 
+        private Nervana_MgdExplorer4Entity _listview;
+
         public Nervana_ExplorerSpace(object? data, bool asPalatte = false)
         {
             InitializeComponent();
-
-            if (asPalatte)
-            {
-                DocumentCollection dm = Platform.ApplicationServices.Application.DocumentManager;
-                dm.MdiActiveDocument.ImpliedSelectionChanged -= new EventHandler(callback_SelectionChanged);
-                dm.MdiActiveDocument.ImpliedSelectionChanged += new EventHandler(callback_SelectionChanged);
-            }
-
-            this.ListView_Info.SelectionMode = System.Windows.Controls.SelectionMode.Single;
+            _listview = new Nervana_MgdExplorer4Entity();
+            this.GroupBoxForListView.Content = _listview;
 
             onUpdate(data);
         }
@@ -69,26 +65,7 @@ namespace NervanaNcMgd.UI.Windows
             }
         }
 
-        private void callback_SelectionChanged(object? sender, EventArgs e)
-        {
-            object? data = null;
-            Editor ed = HostMgd.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-
-            SelectionSet SelSet = ed.SelectImplied().Value;
-            if (SelSet.Count > 0)
-            {
-                data = new Teigha.DatabaseServices.ObjectIdCollection(SelSet.GetObjectIds());
-            }
-            else
-            {
-                PromptSelectionResult res = ed.GetSelection();
-                if (res.Status == PromptStatus.OK && res.Value.Count > 0)
-                {
-                    data = new Teigha.DatabaseServices.ObjectIdCollection(res.Value.GetObjectIds());
-                }
-            }
-            onUpdate(data);
-        }
+        
 
         private void setChildElementsFrom(ETreeItem TreeDef, TreeViewItem elmNode)
         {
@@ -106,27 +83,7 @@ namespace NervanaNcMgd.UI.Windows
 
         private void setObjectToView(EParametersGroup[]? data)
         {
-            this.ListView_Info.Items.Clear();
-            int i_counter = 0;
-            if (data == null) return;
-            foreach (var group_Definition in data)
-            {
-                this.ListView_Info.Items.Add(new EParameter($"---{group_Definition.GroupName}---", null) {IsCategory = true});
-                i_counter++;
-
-                //OwnerTypes.Sort((t1, t2) => t1.IsSubclassOf(t2).CompareTo(t2.IsSubclassOf(t1)));
-                var group_Parameters = group_Definition.Parameters.OrderBy(p => p.Caption);//  .Sort((p1, p2) => p1.Caption.CompareTo(p2.Caption));
-                foreach (var groupItem in group_Parameters)
-                {
-                    //TODO: Set style and delete column CanDeep
-                    //groupItem.Style = p_ListViewStyle_Common;
-                    //if (groupItem.PType == EParameter_Type.CanExplore) groupItem.Style = p_ListViewStyle_Bold;
-                    //if (groupItem.IsCategory) groupItem.Style = p_ListViewStyle_Category;
-                    this.ListView_Info.Items.Add(groupItem);
-                    i_counter++;  
-                }
-            }
-            
+            _listview.setObjectToView(data);
         }
 
         private void TreeView_AfterSelect(object sender, RoutedEventArgs e)
@@ -153,24 +110,6 @@ namespace NervanaNcMgd.UI.Windows
 
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ListView? senderListView = sender as ListView;
-            if (senderListView == null || senderListView.SelectedItem == null) return;
-
-            this._handler.ExploreValue(this.ListView_Info.SelectedItem);
-            
-        }
-        private void Button_CopySingle_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.ListView_Info.SelectedItem == null) return;
-
-            this._handler.CopySingleValue(this.ListView_Info.SelectedItem);
-        }
-
-        private void Button_CopyAll_Click(object sender, RoutedEventArgs e)
-        {
-            this._handler.CopyAllValues(this.p_ShowedTag);
-        }
+        
     }
 }

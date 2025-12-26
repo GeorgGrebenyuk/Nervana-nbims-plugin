@@ -76,16 +76,18 @@ namespace NervanaNcMgd.UI.Controls
                     data = new Teigha.DatabaseServices.ObjectIdCollection(res.Value.GetObjectIds());
                 }
             }
-            onUpdate(data);
-        }
 
-        public void onUpdate(object? data)
-        {
             _handler = new MgdExplorerReflection_Handler(data);
             if (_handler.Items.Count > 0) setObjectToView(_handler.GetData(0));
         }
 
-        private void setObjectToView(EParametersGroup[]? data)
+        //public void onUpdate(object? data)
+        //{
+        //    _handler = new MgdExplorerReflection_Handler(data);
+        //    if (_handler.Items.Count > 0) setObjectToView(_handler.GetData(0));
+        //}
+
+        internal void setObjectToView(EParametersGroup[]? data)
         {
             this.ListView_Info.Items.Clear();
             int i_counter = 0;
@@ -110,6 +112,18 @@ namespace NervanaNcMgd.UI.Controls
             if (senderListView == null || senderListView.SelectedItem == null) return;
 
             this._handler.ExploreValue(this.ListView_Info.SelectedItem);
+        }
+
+        private void Button_CopySingle_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ListView_Info.SelectedItem == null) return;
+
+            this._handler.CopySingleValue(this.ListView_Info.SelectedItem);
+        }
+
+        private void Button_CopyAll_Click(object sender, RoutedEventArgs e)
+        {
+            this._handler.CopyAllValues(0);
         }
     }
 }

@@ -23,7 +23,6 @@ namespace NervanaNcMgd.Functions
             {
                 var hostView = new ElementHost
                 {
-                    
                     AutoSize = false,
                     Dock  = System.Windows.Forms.DockStyle.Fill,
                     Child = new Nervana_MgdExplorer4Entity(true)
