@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using NervanaNcMgd.UI.Windows;
+using NervanaNcMgd.UI.Controls;
 
 namespace NervanaNcMgd.Functions
 {
@@ -18,12 +21,19 @@ namespace NervanaNcMgd.Functions
         {
             if (ps_Attrs == null)
             {
+                var hostView = new ElementHost
+                {
+                    
+                    AutoSize = false,
+                    Dock  = System.Windows.Forms.DockStyle.Fill,
+                    Child = new Nervana_MgdExplorer4Entity()
+                };
+
                 //use constructor with Guid so that we can save/load user data
                 ps_Attrs = new HostMgd.Windows.PaletteSet("MgdExplorerReflection", "MgdExplorerReflectionObject_Palette", ps_Attrs_id);
                 ps_Attrs.MinimumSize = new Size(241, 300);
                 ps_Attrs.Size = new Size(241, 300);
-                mExplorer = new Nervana_ExplorerSpace(null, true);
-                ps_Attrs.AddVisual("Обозреватель свойств классов", mExplorer);
+                ps_Attrs.Add("Обозреватель свойств классов", hostView);
             }
 
             ps_Attrs.Visible = true;

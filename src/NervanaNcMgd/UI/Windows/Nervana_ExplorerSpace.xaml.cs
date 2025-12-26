@@ -43,23 +43,6 @@ namespace NervanaNcMgd.UI.Windows
                 dm.MdiActiveDocument.ImpliedSelectionChanged -= new EventHandler(callback_SelectionChanged);
                 dm.MdiActiveDocument.ImpliedSelectionChanged += new EventHandler(callback_SelectionChanged);
             }
-            
-
-            //Init styles
-            p_ListViewStyle_Common = new Style();
-            p_ListViewStyle_Common.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = Brushes.Black });
-            p_ListViewStyle_Common.Setters.Add(new Setter { Property = Control.FontSizeProperty, Value = 12.0 });
-            p_ListViewStyle_Common.Setters.Add(new Setter { Property = Control.FontWeightProperty, Value = FontWeights.Normal });
-
-            p_ListViewStyle_Bold = new Style();
-            p_ListViewStyle_Bold.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = Brushes.Black });
-            p_ListViewStyle_Bold.Setters.Add(new Setter { Property = Control.FontSizeProperty, Value = 12.0 });
-            p_ListViewStyle_Bold.Setters.Add(new Setter { Property = Control.FontWeightProperty, Value = FontWeights.Bold });
-
-            p_ListViewStyle_Category = new Style();
-            p_ListViewStyle_Category.Setters.Add(new Setter { Property = Control.ForegroundProperty, Value = Brushes.Blue });
-            p_ListViewStyle_Category.Setters.Add(new Setter { Property = Control.FontSizeProperty, Value = 12.0 });
-            p_ListViewStyle_Category.Setters.Add(new Setter { Property = Control.FontWeightProperty, Value = FontWeights.Normal });
 
             this.ListView_Info.SelectionMode = System.Windows.Controls.SelectionMode.Single;
 
