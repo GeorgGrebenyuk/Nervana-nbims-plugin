@@ -20,7 +20,7 @@ namespace NervanaNcMgd.Functions
             get
             {
                 if (PType == EParameter_Type.CanExplore) return "+";
-                else if (IsCategory) return "";
+                else if (IsCategory) return "Cat";
                 else return "";
             }
         }
