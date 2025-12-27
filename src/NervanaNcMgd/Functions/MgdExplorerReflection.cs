@@ -262,7 +262,7 @@ namespace NervanaNcMgd.Functions
         {
             MgdExplorerReflection_ExplorerStructure explStructure = new MgdExplorerReflection_ExplorerStructure();
             if (obj == null) return explStructure;
-#if NET_FR
+#if NET__FR
             Type objType = obj.GetType();
             bool can_process1 = false;
             if (objType.Name.Contains(p_Type_COM)) can_process1 = true;
@@ -271,9 +271,9 @@ namespace NervanaNcMgd.Functions
             p_elemDataCounter = 0;
             //ProcessTypes(objType);
 
-            if (DispatchUtility.ImplementsIDispatch(obj))
+            if (MgdExplorerReflection_DispatchUtility.ImplementsIDispatch(obj))
             {
-                Type dispatchType = DispatchUtility.GetType(obj, false);
+                Type dispatchType = MgdExplorerReflection_DispatchUtility.GetType(obj, false);
                 if (dispatchType != null)
                 {
                     dynamic obj2 = obj;
@@ -295,7 +295,7 @@ namespace NervanaNcMgd.Functions
                     {
                         foreach (var sub_obj in (IEnumerable)obj2)
                         {
-                            Type sub_dispatchType = DispatchUtility.GetType(sub_obj, false);
+                            Type sub_dispatchType = MgdExplorerReflection_DispatchUtility.GetType(sub_obj, false);
                             ETreeItem sub_item = new ETreeItem(sub_dispatchType.Name, p_elemDataCounter);
                             var sub_com_props = GetProperties_COM(sub_dispatchType, sub_obj);
                             p_elemDataCounter++;

@@ -6,8 +6,8 @@
 
 ![](assets/2025-12-26-23-52-26-image.png)
 
-- для nanoCAD BIM Строительство: `Nervana-plugin.package`;
+- для nanoCAD BIM Строительство: `Nervana-plugin-NcBIMs.package`;
 
-- для ModelStudio CS: `Nervana-plugin-COM.package`;
+- для ModelStudio CS: `Nervana-plugin-NcCOM.package`;
 
-- для платформы nanoCAD: `Nervana-plugin-NcadOnly.package`;
+- для платформы nanoCAD: `Nervana-plugin-Nc.package`;

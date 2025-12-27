@@ -60,6 +60,7 @@ namespace NervanaNcMgd.Functions
                 {
                     foreach (var item in convertedObj)
                     {
+                        if (item == null) continue;
                         items.Add(item.ToString());
                     }
                 }

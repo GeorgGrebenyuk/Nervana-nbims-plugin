@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ApplicationPackage
+  xmlns="hostApplicationPackage/v01"
+  Name="Nervana-plugin"
+ >
+  <Components>
+    <ConfigEntry
+      FileName="NervanaNcadCOMCommands.cfg"
+      FileType="CFG"
+    />
+    <ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="net48\NervanaCommonMgd.dll"
+        ModuleType="MGD"
+    />
+	<ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="net48\NervanaNcMgd.dll"
+        ModuleType="MGD"
+    />
+	<ComponentEntry
+        AppName="Nervana-plugin"
+        ModuleName="net48\NervanaNcComMgd.dll"
+        ModuleType="MGD"
+    />
+  </Components>
+</ApplicationPackage>
