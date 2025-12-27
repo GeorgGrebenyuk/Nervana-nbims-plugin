@@ -7,6 +7,7 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -29,13 +30,46 @@
                 <PackageReference Include="nanoCAD.Platform.NET" Version="22.0.6013.3747">
                     <ExcludeAssets>runtime</ExcludeAssets>
                 </PackageReference>
-                <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
             </ItemGroup>
             <PropertyGroup>
                 <DefineConstants>NET__FR</DefineConstants>
             </PropertyGroup>
         </When>
     </Choose>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <COMReference Include="mdsUnitsLib">
+        <WrapperTool>tlbimp</WrapperTool>
+        <VersionMinor>0</VersionMinor>
+        <VersionMajor>1</VersionMajor>
+        <Guid>1ae1985c-5d87-4e89-8e67-068628fc3cd6</Guid>
+        <Lcid>0</Lcid>
+        <Isolated>false</Isolated>
+        <EmbedInteropTypes>true</EmbedInteropTypes>
+      </COMReference>
+      <COMReference Include="mdsURSLib">
+        <WrapperTool>tlbimp</WrapperTool>
+        <VersionMinor>0</VersionMinor>
+        <VersionMajor>1</VersionMajor>
+        <Guid>70a33123-81a3-4c4b-8a90-cfedd3a35994</Guid>
+        <Lcid>0</Lcid>
+        <Isolated>false</Isolated>
+        <EmbedInteropTypes>true</EmbedInteropTypes>
+      </COMReference>
+      <COMReference Include="mdsLibManagerLib">
+        <WrapperTool>tlbimp</WrapperTool>
+        <VersionMinor>0</VersionMinor>
+        <VersionMajor>1</VersionMajor>
+        <Guid>1eb7b184-2c93-4db2-97e8-2f8a392495c1</Guid>
+        <Lcid>0</Lcid>
+        <Isolated>false</Isolated>
+        <EmbedInteropTypes>true</EmbedInteropTypes>
+      </COMReference>
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj" />

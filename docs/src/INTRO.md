@@ -9,5 +9,3 @@ https://github.com/GeorgGrebenyuk/Nervana-nbims-plugin
 > Этимология названия -- от "нирвана" (покой, блаженство, освобождение от страданий; на иконке её символизирует лотос) и "нервы" (то, что нас окружает при работе с САПР; на иконке -- корни\нервы);
 
 [Telegram: View @nervana_nanocad_plugin_news](https://t.me/nervana_nanocad_plugin_news)
-
-

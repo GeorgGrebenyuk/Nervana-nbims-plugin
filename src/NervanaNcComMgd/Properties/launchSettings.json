@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "nc 25.0": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Nanosoft\\nanoCAD x64 24.0\\nCad.exe ",
+      "commandLineArgs": "-g \"C:\\Program Files\\CSoft\\Model Studio CS\\NANOAEC\\AEC24.package\" -r AEC -showlogo -g $(SolutionDir)bin\\$(Configuration)\\Nervana-plugin-NcCOM.package"
+    }
+  }
+}
