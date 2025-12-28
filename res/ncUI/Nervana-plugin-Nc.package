@@ -11,12 +11,12 @@
     />
     <ComponentEntry
         AppName="Nervana-plugin"
-        ModuleName="NervanaCommonMgd.dll"
+        ModuleName="net6.0-windows\NervanaCommonMgd.dll"
         ModuleType="MGD"
     />
 	<ComponentEntry
         AppName="Nervana-plugin"
-        ModuleName="NervanaNcMgd.dll"
+        ModuleName="net6.0-windows\NervanaNcMgd.dll"
         ModuleType="MGD"
     />
   </Components>
