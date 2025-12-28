@@ -62,9 +62,7 @@ namespace NervanaNcComMgd.UI.Controls
             dm.DocumentToBeDestroyed += new DocumentCollectionEventHandler(callback_DocumentToBeDestroyed);
             dm.DocumentBecameCurrent += new DocumentCollectionEventHandler(callback_DocumentBecameCurrent);
 
-            this.ListView_Info.DataContextChanged += ListView_Info_DataContextChanged;
         }
-
 
 
         private void callback_DocumentToBeDestroyed(object sender, DocumentCollectionEventArgs e)
@@ -164,6 +162,8 @@ namespace NervanaNcComMgd.UI.Controls
                 string caption = parameter.Comment;
                 if (caption == "") caption = parameter.Name;
                 elemdDef.Parameters.Add(new mdsElemParameterDef() { Caption = caption, Value = parameter.Value, Name = parameter.Name, NativeData = parameter });
+
+                System.Diagnostics.Trace.WriteLine($"Add: " + caption);
             }
 
             var childs = mstParametricEntity.SubElements;
@@ -266,25 +266,5 @@ namespace NervanaNcComMgd.UI.Controls
             }
             Clipboard.SetText(props.ToString());
         }
-
-        private void ListView_Info_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            ListView? senderListView = sender as ListView;
-            if (senderListView == null || senderListView.SelectedItem == null) return;
-            mdsElemParameterDef? lvItem = senderListView.SelectedItem as mdsElemParameterDef;
-            if (lvItem == null) return;
-
-            lvItem.NativeData.Value = lvItem.Value;
-        }
-
-        //private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    ListView? senderListView = sender as ListView;
-        //    if (senderListView == null || senderListView.SelectedItem == null) return;
-        //    mdsElemParameterDef? lvItem = senderListView.SelectedItem as mdsElemParameterDef;
-        //    if (lvItem == null) return;
-
-        //    lvItem.NativeData.Value = lvItem.Value;
-        //}
     }
 }

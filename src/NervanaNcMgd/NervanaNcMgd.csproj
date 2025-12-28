@@ -53,7 +53,9 @@
     </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj" />
+    <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj">
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

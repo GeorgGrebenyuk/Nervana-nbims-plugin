@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <Platforms>x64</Platforms>
     <LangVersion>9.0</LangVersion>
@@ -13,32 +13,21 @@
     <Version>1.0.0</Version>
   </PropertyGroup>
 
-    <Choose>
-        <When Condition=" '$(TargetFramework)' == 'net6.0-windows'">
-            <ItemGroup>
-                <PackageReference Include="nanoCAD.Platform.NET" Version="23.0.6177.4117">
-                    <ExcludeAssets>runtime</ExcludeAssets>
-                </PackageReference>
-            </ItemGroup>
-            <PropertyGroup>
-                <DefineConstants>NET__6PLUS</DefineConstants>
-            </PropertyGroup>
-        </When>
-        <When Condition=" '$(TargetFramework)' == 'net48'">
-            <ItemGroup>
-                <PackageReference Include="nanoCAD.Platform.NET" Version="22.0.6013.3747">
-                    <ExcludeAssets>runtime</ExcludeAssets>
-                </PackageReference>
-                <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-            </ItemGroup>
-            <PropertyGroup>
-                <DefineConstants>NET__FR</DefineConstants>
-            </PropertyGroup>
-        </When>
-    </Choose>
+    <ItemGroup>
+        <PackageReference Include="nanoCAD.BIM.NET" Version="25.0.30758.104">
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <PropertyGroup>
+        <DefineConstants>NET__6PLUS</DefineConstants>
+    </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+
     </ItemGroup>
 
 </Project>
