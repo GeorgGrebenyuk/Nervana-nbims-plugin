@@ -12,7 +12,7 @@
             <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListView x:Name="ListView_Info" Grid.Row="1" SelectionChanged="ListView_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <ListView x:Name="ListView_Info" Grid.Row="0" SelectionChanged="ListView_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Visible">
 			<ListView.View>
 				<GridView>
 					<GridViewColumn DisplayMemberBinding="{Binding Path=Caption}" Width="Auto" Header="Name"></GridViewColumn>
@@ -46,7 +46,7 @@
 				</Style>
 			</ListView.ItemContainerStyle>
 		</ListView>
-		<Button x:Name="Button_CopySingle" Grid.Row="2" Margin="0,5,0,0" Content="Копировать позицию" Click="Button_CopySingle_Click"></Button>
-		<Button x:Name="Button_CopyAll" Grid.Row="3" Margin="0,5,0,0" Content="Копировать всё" Click="Button_CopyAll_Click"></Button>
+		<Button x:Name="Button_CopySingle" Grid.Row="1" Margin="0,5,0,0" Content="Копировать позицию" Click="Button_CopySingle_Click"></Button>
+		<Button x:Name="Button_CopyAll" Grid.Row="2" Margin="0,5,0,0" Content="Копировать всё" Click="Button_CopyAll_Click"></Button>
 	</Grid>
 </UserControl>
