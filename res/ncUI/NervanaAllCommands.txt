@@ -5,3 +5,4 @@
 Обозреватель моделей	Nervana_MgdExplorerReflectionDocuments	Обзор свойств класса коллекции открытых документов nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
 Обозреватель модели	Nervana_MgdExplorerReflectionDocument	Обзор свойств активного документа (модели) nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
 Обозреватель БД модели	Nervana_MgdExplorerReflectionDatabase	Обзор свойств активной Базы данных документа (модели) nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
+Обозреватель параметров	Nervana_ParametersEditor	Обзор и редактирования параметров одного параметрического объекта	Параметры	LargeWithText	

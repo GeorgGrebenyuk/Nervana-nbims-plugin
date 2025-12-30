@@ -73,6 +73,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj" />
+        <ProjectReference Include="..\NervanaNcMgd\NervanaNcMgd.csproj" />
     </ItemGroup>
 
 </Project>
