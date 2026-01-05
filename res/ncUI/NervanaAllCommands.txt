@@ -6,3 +6,9 @@
 Обозреватель модели	Nervana_MgdExplorerReflectionDocument	Обзор свойств активного документа (модели) nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
 Обозреватель БД модели	Nervana_MgdExplorerReflectionDatabase	Обзор свойств активной Базы данных документа (модели) nanoCAD	Утилиты	LargeWithText	Обозреватель Reflection
 Обозреватель параметров	Nervana_ParametersEditor	Обзор и редактирования параметров одного параметрического объекта	Параметры	LargeWithText	
+Расставить в помещениях	Nervana_CopyObjectsToRoom	Копирование выбранных объектов в каждое из заданных помещений	Помещения	SmallWithoutText	
+Перекрытие по помещению	Nervana_Room2Floor	Создает перекрытия по контуру помещения	Помещения	SmallWithoutText	
+Помещение по перекрытию	Nervana_Floor2Room	Создает помещение по внешнему контуру перекрытия	Помещения	SmallWithoutText	
+Помещение по контурам	Nervana_Polylines2Room	Создает помещения по замкнутым контурам (полилиниям)	Помещения	SmallWithoutText	
+Связать стены с помещением	Nervana_LinkWallsToRoom	Связывает стены с помещениями на зданном удалении от контура помещения	Помещения	SmallWithoutText	
+Связать объекты с помещением	Nervana_LinkObjectsToRoom	Связывает элементы с помещениями по условию их попадания в помещение	Помещения	SmallWithoutText	

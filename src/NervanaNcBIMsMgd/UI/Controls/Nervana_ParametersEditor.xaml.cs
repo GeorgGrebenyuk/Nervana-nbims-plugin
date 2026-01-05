@@ -23,79 +23,23 @@ using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using HostMgd.Windows;
 using BIMStructureMgd.ObjectProperties;
+using NervanaCommonMgd;
 
 namespace NervanaNcBIMsMgd.UI.Controls
 {
-    public class ParameterContainer : INotifyPropertyChanged
+    public class ParameterContainer
     {
         public const string NO_CATEGORY = "Общие";
-        private int paramId { get; set; }
-        private string _name { get; set; }
-        private string _caption { get; set; }
-        private string _value { get; set; }
+        public int ParamId { get; set; } = -1;
+        public string Name { get; set; } = "";
+        public string Caption { get; set; } = "";
+        public string Value { get; set; } = "";
 
-        internal string Category { get; set; } = NO_CATEGORY;
+        public string Category { get; set; } = NO_CATEGORY;
 
-        private bool isCategory { get; set; } = false;
-        private bool isReadOnly { get; set; } = false;
-        private bool isCalculated { get; set; } = false;
-
-
-        //public ParameterContainer(Parameter parameter, string? category)
-        //{
-        //    this._name = parameter.Name;
-        //    this._value = parameter.Value;
-        //    this._caption = string.IsNullOrEmpty(parameter.Comment) ? "" : parameter.Comment;
-        //    this.Category = category ?? ParameterContainer.NO_CATEGORY;
-        //    this.isCalculated = parameter.Calculated;
-        //}
-
-        //public ParameterContainer() { }
-
-
-        public string Name
-        {
-            get => _name;
-            set { _name = value; OnPropertyChanged(); }
-        }
-
-        public string Caption
-        {
-            get => _caption;
-            set { _caption = value; OnPropertyChanged(); }
-        }
-
-        public string Value
-        {
-            get => _value;
-            set { _value = value; OnPropertyChanged(); }
-        }
-
-        public bool IsCategory
-        {
-            get => isCategory;
-            set { isCategory = value; OnPropertyChanged(); }
-        }
-
-        public bool IsReadOnly
-        {
-            get => isReadOnly;
-            set { isReadOnly = value; OnPropertyChanged(); }
-        }
-
-        public bool IsCalculated
-        {
-            get => isCalculated;
-            set { isCalculated = value; OnPropertyChanged(); }
-        }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public bool IsCategory { get; set; } = false;
+        public bool IsReadOnly { get; set; } = false;
+        public bool IsCalculated { get; set; } = false;
 
         public static ObservableCollection<ParameterContainer> GetParametersFromElementData(ElementData elemData)
         {
@@ -121,6 +65,7 @@ namespace NervanaNcBIMsMgd.UI.Controls
             var noCategoryParameters = parameters.Where(p => !(p.Def?.Categories.Any() ?? false)).ToList();
             cat2params.Add(ParameterContainer.NO_CATEGORY, noCategoryParameters.ToList());
 
+            TraceWriter.Log("End cat2params");
 
             ObservableCollection<ParameterContainer> result = new ObservableCollection<ParameterContainer>();
             foreach (var orderParamSet in cat2params)
@@ -145,13 +90,6 @@ namespace NervanaNcBIMsMgd.UI.Controls
             return result;
         }
     }
-
-    public class ViewModel
-    {
-        public ObservableCollection<ParameterContainer> Parameters { get; set; }
-        
-    }
-
 
 
     /// <summary>
@@ -305,8 +243,10 @@ namespace NervanaNcBIMsMgd.UI.Controls
         private void setParametersFrom(ElementData elmData)
         {
             //this.DataGrid_ParametersInfo.SelectedItem = null;
-            this.Parameters = new ObservableCollection<ParameterContainer>();
+            //this.Parameters = new ObservableCollection<ParameterContainer>();
+            TraceWriter.Log("Start calc parameters");
             this.Parameters = ParameterContainer.GetParametersFromElementData(elmData);
+            TraceWriter.Log(this.Parameters.Count.ToString());
         }
 
         private void TreeView_AfterSelect(object sender, RoutedEventArgs e)

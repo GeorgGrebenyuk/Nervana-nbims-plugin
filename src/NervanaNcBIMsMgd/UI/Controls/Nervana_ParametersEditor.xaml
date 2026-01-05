@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NervanaNcBIMsMgd.UI.Controls"
-             mc:Ignorable="d">
+             mc:Ignorable="d" d:Width="200" d:Height="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.2*"></RowDefinition>
@@ -48,28 +48,6 @@
                     Width="0.5*">
                 </DataGridTextColumn>
             </DataGrid.Columns>
-            <DataGrid.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <!-- Base style -->
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Foreground" Value="Black"/>
-
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsCategory}" Value="True">
-                            <Setter Property="Background" Value="#D4D4D4"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsReadOnly}" Value="True">
-                            <Setter Property="Background" Value="#FFFFBAC0"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsReadOnly}" Value="False">
-                            <Setter Property="Background" Value="#FFD3FFD2"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsCalculated}" Value="True">
-                            <Setter Property="Background" Value="#FFBE3AFF"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.ItemContainerStyle>
         </DataGrid>
        
     </Grid>
