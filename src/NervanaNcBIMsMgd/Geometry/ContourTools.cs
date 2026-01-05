@@ -7,6 +7,7 @@ using Teigha.DatabaseServices;
 using Teigha.Geometry;
 
 using NervanaNcBIMsMgd.Extensions;
+using NervanaCommonMgd;
 
 namespace NervanaNcBIMsMgd.Geometry
 {
@@ -31,24 +32,29 @@ namespace NervanaNcBIMsMgd.Geometry
             DBObjectCollection? offsetedPlines = null;
             try
             {
-                offsetedPlines = pline2d.GetOffsetCurves(offset);
+                offsetedPlines = pline2d.GetOffsetCurves(offset * -1.0);
             }
             catch { }
-
             if (offsetedPlines == null) return null;
+
+            TraceWriter.Log($"GetOffsetCurves = {offsetedPlines.Count} шт. ", LogType.Add);
 
             using Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction();
 
+            Point3d[]? targetPs = null;
             foreach (Entity offsetedPlineObject in offsetedPlines)
             {
                 Polyline? offsetedPline = offsetedPlineObject as Polyline;
                 if (offsetedPline == null) continue;
 
                 BIMStructureMgd.Common.Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, offsetedPline);
-                tr.Commit();
+                
 
-                return offsetedPline.ToVertexes();
+                targetPs = offsetedPline.ToVertexes();
             }
+            tr.Commit();
+
+            return targetPs;
             return null;
         }
 
