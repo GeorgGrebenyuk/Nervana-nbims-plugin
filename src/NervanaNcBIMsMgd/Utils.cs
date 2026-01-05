@@ -12,7 +12,7 @@ namespace NervanaNcBIMsMgd
     internal class Utils
     {
         public static Document CurrentDoc => HostMgd.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-        public static ObjectIdCollection SelectObjectsByTypes(Type[]? types)
+        public static ObjectIdCollection SelectObjectsByTypes(Type[]? types, string message = "Выберите объекты ...")
         {
             Document acDoc = CurrentDoc;
             Editor ed = acDoc.Editor;
@@ -28,8 +28,8 @@ namespace NervanaNcBIMsMgd
             }
             else
             {
-                ed.WriteMessage("Выберите объекты ...");
-                var SelSet_result = ed.GetSelection(;
+                ed.WriteMessage(message);
+                var SelSet_result = ed.GetSelection();
                 if (SelSet_result.Status == PromptStatus.OK)
                 {
                     SelSet = SelSet_result.Value;

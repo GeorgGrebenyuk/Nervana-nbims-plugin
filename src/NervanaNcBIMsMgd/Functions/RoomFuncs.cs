@@ -13,7 +13,7 @@ using BIMStructureMgd.ObjectProperties;
 
 using NervanaNcBIMsMgd.Extensions;
 using NervanaNcBIMsMgd.Geometry;
-
+using NervanaCommonMgd;
 
 namespace NervanaNcBIMsMgd.Functions
 {
@@ -45,21 +45,21 @@ namespace NervanaNcBIMsMgd.Functions
 
             if (mode == RoomFuncVariant.Nervana_CopyObjectsToRoom)
             {
-                func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(StructuralPart) });
-                func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) });
+                func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(ParametricEntity) }, "Выберите параметрические объекты для копирования ");
+                func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             }
-            else if (mode == RoomFuncVariant.Nervana_Floor2Room) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingSlab) });
-            else if (mode == RoomFuncVariant.Nervana_Room2Floor) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) });
-            else if (mode == RoomFuncVariant.Nervana_Polylines2Room) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(Polyline), typeof(Polyline2d), typeof (Polyline3d) });
+            else if (mode == RoomFuncVariant.Nervana_Floor2Room) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingSlab) }, "Выберите перекрытия ");
+            else if (mode == RoomFuncVariant.Nervana_Room2Floor) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
+            else if (mode == RoomFuncVariant.Nervana_Polylines2Room) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(Polyline), typeof(Polyline2d), typeof (Polyline3d) }, "Выберите замкнутые полилинии ");
             else if (mode == RoomFuncVariant.Nervana_LinkWallsToRoom) 
             {
-                func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingWallBase) });
-                func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) });
+                func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(LinearBuildingWall ) }, "Выберите стены ");
+                func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             }
             else if (mode == RoomFuncVariant.Nervana_LinkObjectsToRoom)
             {
-                func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(StructuralPart) });
-                func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) });
+                func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(ParametricEntity) }, "Выберите параметрические объекты ");
+                func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             }
 
             return func;
@@ -96,13 +96,6 @@ namespace NervanaNcBIMsMgd.Functions
 
             using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
-                //BlockTable? ncBlkTbl = tr.GetObject(Utils.CurrentDoc.Database.BlockTableId,
-                //                                OpenMode.ForRead) as BlockTable;
-                //if (ncBlkTbl == null) return;
-
-                //BlockTableRecord? ncMspace = tr.GetObject(ncBlkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-                //if (ncMspace == null) return;
-
                 foreach (ObjectId spaceEntId in this._sourceObjects2)
                 {
                     SpaceEntity? spaceEntInstance = tr.GetObject(spaceEntId, OpenMode.ForRead) as SpaceEntity;
@@ -111,23 +104,30 @@ namespace NervanaNcBIMsMgd.Functions
                     long spaceEntInstanceHandleId = spaceEntInstance.Handle.Value;
                     if (!room2centroid.ContainsKey(spaceEntInstanceHandleId)) room2centroid.Add(spaceEntInstanceHandleId, spaceEntInstance.GetCentroid());
                     Point3d roomCentroid = room2centroid[spaceEntInstanceHandleId];
+                    TraceWriter.Log($"Centroid was calced {roomCentroid.ToString()}", LogType.Modify);
 
                     Vector3d roomVector = new Vector3d(roomCentroid.X, roomCentroid.Y, roomCentroid.Z);
 
                     foreach (ObjectId structurePartId in this._sourceObjects1)
                     {
-                        StructuralPart? structuralPartInstance = tr.GetObject(structurePartId, OpenMode.ForRead) as StructuralPart;
-                        if (structuralPartInstance == null) continue;
+                        ParametricEntity? ParametricEntityInstance = tr.GetObject(structurePartId, OpenMode.ForRead) as ParametricEntity;
+                        if (ParametricEntityInstance == null) continue;
+                        TraceWriter.Log($"ParametricEntity getting success", LogType.Add);
+                        Vector3d ParametricEntityInstancePlacement = new Vector3d(ParametricEntityInstance.BasePoint.X, ParametricEntityInstance.BasePoint.Y, ParametricEntityInstance.BasePoint.Z);
+                        
 
-                        StructuralPart? structuralPartInstanceCopy = structuralPartInstance.Clone() as StructuralPart;
-                        if (structuralPartInstanceCopy == null) continue;
+                        ParametricEntity? ParametricEntityInstanceCopy = ParametricEntityInstance.Clone() as ParametricEntity;
+                        if (ParametricEntityInstanceCopy == null) continue;
+                        TraceWriter.Log($"ParametricEntity CLONE getting success", LogType.Add);
 
-                        structuralPartInstanceCopy.TransformBy(Matrix3d.Displacement(roomVector));
+                        ParametricEntityInstanceCopy.TransformBy(Matrix3d.Displacement(roomVector - ParametricEntityInstancePlacement));
 
-                        Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, structuralPartInstanceCopy);
+                        Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, ParametricEntityInstanceCopy);
 
-                        //ncMspace.AppendEntity(structuralPartInstanceCopy);
-                        //tr.AddNewlyCreatedDBObject(structuralPartInstanceCopy, true);  
+                        TraceWriter.Log($"ParametricEntity ADDED success", LogType.Add);
+
+                        //ncMspace.AppendEntity(ParametricEntityInstanceCopy);
+                        //tr.AddNewlyCreatedDBObject(ParametricEntityInstanceCopy, true);  
                     }
                 }
                 tr.Commit();
@@ -197,12 +197,13 @@ namespace NervanaNcBIMsMgd.Functions
             ObjectWithGeometry[] tmpSpaceEntities = new ObjectWithGeometry[_sourceObjects2.Count];
             ObjectWithGeometry[] tmpAnalyzedEntities = new ObjectWithGeometry[_sourceObjects1.Count];
 
-            double trimmedPline = 0.0;
-            if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
-            {
-                double? trimmedPline2 = Utils.GetUsersDoubleInput("Величина смещения для анализируемого контура помещения");
-                if (trimmedPline2 == null || trimmedPline2 < 0) trimmedPline = 100.0;
-            }
+            double trimmedPline = 800.0;
+
+            //if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
+            //{
+            //    double? trimmedPline2 = Utils.GetUsersDoubleInput("Величина смещения для анализируемого контура помещения");
+            //    if (trimmedPline2 == null || trimmedPline2 < 0) trimmedPline = 100.0;
+            //}
 
             using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
@@ -219,9 +220,13 @@ namespace NervanaNcBIMsMgd.Functions
                     if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
                     {
                         ContourTools ct = new ContourTools(spaceEntInstance.GetBoundary());
-                        spaceGeometry.Geometry = ct.OffsetTo(trimmedPline);
+                        var offs = ct.OffsetTo(trimmedPline);
+                        string offsetPoints = string.Join(";", offs.Select(x => x.ToString()));
+                        TraceWriter.Log($"Calced offset curve = " + offsetPoints, LogType.Add);
+                        spaceGeometry.Geometry = offs;
                     }
-                    spaceGeometry.Bounds = spaceEntInstance.GetBounds2();
+                    spaceGeometry.Bounds = spaceEntInstance.GetBounds2(trimmedPline);
+
                     tmpSpaceEntities[spaceEntCounter] = spaceGeometry;
                     spaceEntCounter++;
                 }
@@ -231,20 +236,20 @@ namespace NervanaNcBIMsMgd.Functions
                 {
                     if (this._funcMode == RoomFuncVariant.Nervana_LinkObjectsToRoom)
                     {
-                        StructuralPart? structuralPartInstance = tr.GetObject(entId, OpenMode.ForRead) as StructuralPart;
-                        if (structuralPartInstance == null) continue;
+                        ParametricEntity? ParametricEntityInstance = tr.GetObject(entId, OpenMode.ForRead) as ParametricEntity;
+                        if (ParametricEntityInstance == null) continue;
 
-                        ObjectWithGeometry structuralPartGeometry = new ObjectWithGeometry();
-                        structuralPartGeometry.ObjectId = entId;
-                        structuralPartGeometry.GeometryType = GeometryVariant.Point;
-                        structuralPartGeometry.Geometry = structuralPartInstance.BasePoint;
+                        ObjectWithGeometry ParametricEntityGeometry = new ObjectWithGeometry();
+                        ParametricEntityGeometry.ObjectId = entId;
+                        ParametricEntityGeometry.GeometryType = GeometryVariant.Point;
+                        ParametricEntityGeometry.Geometry = ParametricEntityInstance.BasePoint;
 
-                        tmpAnalyzedEntities[tructPartEntCounter] = structuralPartGeometry;
+                        tmpAnalyzedEntities[tructPartEntCounter] = ParametricEntityGeometry;
                         tructPartEntCounter++;
                     }
                     else if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
                     {
-                        BuildingWallBase? wallBaseInstance = tr.GetObject(entId, OpenMode.ForRead) as BuildingWallBase;
+                        LinearBuildingWall ? wallBaseInstance = tr.GetObject(entId, OpenMode.ForRead) as LinearBuildingWall ;
                         if (wallBaseInstance == null) continue;
 
                         ObjectWithGeometry wallBaseInstanceGeometry = new ObjectWithGeometry();
@@ -257,6 +262,8 @@ namespace NervanaNcBIMsMgd.Functions
                     };     
                 }
             }
+
+            TraceWriter.Log($"Pre reading success. Parametric ents = {tmpAnalyzedEntities.Length}; Rooms = {tmpSpaceEntities.Length}", LogType.Add);
 
             // 2. Начинаем анализ, перебирая сами объекты
             Dictionary<ObjectId, ObjectId> structObject2Room = new Dictionary<ObjectId, ObjectId>();
@@ -273,6 +280,8 @@ namespace NervanaNcBIMsMgd.Functions
                 }
             }
 
+            TraceWriter.Log($"Anayze was finished = {structObject2Room.Count} results", LogType.Add);
+
             // 3. Для найденных соответвий заполняем свойства проверяемых объектов : добавляем привязку к помещениям
             // Делаем в теле транзакций
 
@@ -283,15 +292,18 @@ namespace NervanaNcBIMsMgd.Functions
                     SpaceEntity? roomInstance = tr.GetObject(structObject2RoomInfo.Value, OpenMode.ForRead) as SpaceEntity;
                     if (roomInstance == null) continue;
 
-                    DBObject linkedEntityObject = tr.GetObject(structObject2RoomInfo.Key, OpenMode.ForRead);
+                    DBObject linkedEntityObject = tr.GetObject(structObject2RoomInfo.Key, OpenMode.ForWrite);
                     IParametricObject? linkedEntity = linkedEntityObject as IParametricObject;
                     if (linkedEntity == null) continue;
-                    ElementData? linkedEntityElmData = linkedEntity?.GetElementData();
-                    if (linkedEntityElmData == null) continue;
 
-                    linkedEntityElmData.SetParameter("PARENT_SPACE_HANDLE", roomInstance.Handle.Value);
-                    linkedEntityElmData.SetParameter("PARENT_SPACE_NAME", roomInstance.Name);
-                    linkedEntityElmData.SetParameter("PARENT_SPACE_NUMBER", roomInstance.Number);
+                    TraceWriter.Log($"Pre add room's params", LogType.Add);
+
+                    linkedEntity.GetElementData().SetParameter("PARENT_SPACE_HANDLE", roomInstance.Handle.Value.ToString());
+                    linkedEntity.GetElementData().SetParameter("PARENT_SPACE_NAME", roomInstance.Name, "Имя родительского помещения", "");
+                    linkedEntity.GetElementData().SetParameter("PARENT_SPACE_NUMBER", roomInstance.Number, "Номер родительского помещения", "");
+
+                    TraceWriter.Log($"Post add room's params", LogType.Add);
+
                 }
 
                 tr.Commit();

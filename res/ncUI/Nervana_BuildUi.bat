@@ -3,8 +3,11 @@ call "..\..\3rdparty\ncad_UI_creator_60\NC_UI_Creator_App.exe" "NervanaAllComman
 
 xcopy NervanaAllCommands* "..\..\bin\Debug" /Y /I
 xcopy Nervana-plugin-NcBIMs.package "..\..\bin\Debug" /Y /I
+xcopy Nervana-plugin-NcBIMs_onlyUI.package "..\..\bin\Debug" /Y /I
+
 xcopy NervanaAllCommands* "..\..\bin\Release" /Y /I
 xcopy Nervana-plugin-NcBIMs.package "..\..\bin\Release" /Y /I
+xcopy Nervana-plugin-NcBIMs_onlyUI.package "..\..\bin\Release" /Y /I
 
 :: Сборка конфига только для платформы nanoCAD
 call "..\..\3rdparty\ncad_UI_creator_60\NC_UI_Creator_App.exe" "NervanaNcadCommands.xml"

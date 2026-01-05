@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Teigha.DatabaseServices;
 using Teigha.Geometry;
 
+using NervanaCommonMgd;
+
 namespace NervanaNcBIMsMgd.Geometry
 {
     enum GeometryVariant
@@ -43,22 +45,7 @@ namespace NervanaNcBIMsMgd.Geometry
             if (otherGeometry == null || otherGeometry.Geometry == null) return false;
             if (otherGeometry.GeometryType == GeometryVariant.Point)
             {
-                if (this.GeometryType != GeometryVariant.Contour || this.AsPoints() == null) return false;
-                Point3d? targetPointRaw = otherGeometry.AsPoint();
-                if (targetPointRaw == null) return false;
-                Point3d targetPoint = targetPointRaw.Value;
-
-                if (Bounds != null)
-                {
-                    if (
-                        Bounds.Value.MinPoint.X! <= targetPoint.X ||
-                        Bounds.Value.MinPoint.Y! <= targetPoint.Y ||
-                        Bounds.Value.MinPoint.Z! <= targetPoint.Z ||
-                        Bounds.Value.MaxPoint.X! >= targetPoint.X ||
-                        Bounds.Value.MaxPoint.Y! >= targetPoint.Y ||
-                        Bounds.Value.MaxPoint.Z! >= targetPoint.Z) return false;
-                }
-                return PointInContourChecking.IsPointInPolygon(targetPoint, this.AsPoints());
+                return isContains(otherGeometry.AsPoint());
             }
             else if (otherGeometry.GeometryType == GeometryVariant.Contour | otherGeometry.GeometryType == GeometryVariant.Line)
             {
@@ -67,12 +54,33 @@ namespace NervanaNcBIMsMgd.Geometry
 
                 for (int i = 0; i < targetLine.Length; i++)
                 {
-                    if (!Contains(targetLine[i])) return false;
+                    if (!isContains(targetLine[i])) return false;
                 }
 
                 return true;
             }
 
+            return false;
+        }
+
+        private bool isContains(Point3d? targetPointRaw)
+        {
+            if (this.GeometryType != GeometryVariant.Contour || this.AsPoints() == null) return false;
+            if (targetPointRaw == null) return false;
+            Point3d targetPoint = targetPointRaw.Value;
+
+            TraceWriter.Log($"Checked value {targetPoint.ToString()}", LogType.Add);
+
+            if (Bounds != null)
+            {
+                if (
+                    Bounds.Value.MinPoint.X <= targetPoint.X &&
+                    Bounds.Value.MinPoint.Y <= targetPoint.Y &&
+                    Bounds.Value.MinPoint.Z <= targetPoint.Z &&
+                    Bounds.Value.MaxPoint.X >= targetPoint.X &&
+                    Bounds.Value.MaxPoint.Y >= targetPoint.Y &&
+                    Bounds.Value.MaxPoint.Z >= targetPoint.Z && PointInContourChecking.IsPointInPolygon(targetPoint, this.AsPoints())) return true;
+            }
             return false;
         }
     }

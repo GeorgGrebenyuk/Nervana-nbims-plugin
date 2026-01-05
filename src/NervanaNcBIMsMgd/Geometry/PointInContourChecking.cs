@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Teigha.Geometry;
 
+using NervanaCommonMgd;
+
 namespace NervanaNcBIMsMgd.Geometry
 {
     internal static class PointInContourChecking
@@ -14,6 +16,8 @@ namespace NervanaNcBIMsMgd.Geometry
         {
             if (point == null) return false;
             if (contour == null) return false;
+
+            TraceWriter.Log($"Start IsPointInPolygon {point.ToString()} plg with {contour.Length} vertices", LogType.Add);
 
             bool inside = false;
             int count = contour.Length;

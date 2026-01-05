@@ -8,6 +8,8 @@ using Teigha.DatabaseServices;
 using Teigha.Geometry;
 using BIMStructureMgd.DatabaseObjects;
 
+using NervanaCommonMgd;
+
 namespace NervanaNcBIMsMgd.Extensions
 {
     internal static class SpaceEntityExtension
@@ -43,14 +45,11 @@ namespace NervanaNcBIMsMgd.Extensions
                     if (!boundary.Contains(plineVettex3d)) boundary.Add(plineVettex3d);
                 }
             }
-
-            Curve2d c;
-            c.GetTrimmedOffset(5, OffsetCurveExtensionType.Chamfer);
-
+            if (boundary[boundary.Count - 1] != boundary[0]) boundary.Add(boundary[0]);
             return boundary.ToArray();
         }
 
-        public static Extents3d GetBounds2(this SpaceEntity spaceEntity)
+        public static Extents3d GetBounds2(this SpaceEntity spaceEntity, double offset = 0.0)
         {
             Point3d[] geom = GetBoundary(spaceEntity);
 
@@ -58,7 +57,11 @@ namespace NervanaNcBIMsMgd.Extensions
             double[] y = geom.Select(point => point.Y).ToArray();
             double[] z = geom.Select(point => point.Z).ToArray();
 
-            return new Extents3d(new Point3d(x.Min(), y.Min(), z.Min()), new Point3d(x.Max(), y.Max(), z.Max()));
+            Extents3d ext = new Extents3d(new Point3d(x.Min() - offset, y.Min() - offset, spaceEntity.FloorValue), new Point3d(x.Max() + offset, y.Max() + offset, spaceEntity.FloorValue + spaceEntity.Height));
+
+            TraceWriter.Log("Extents calced = " + ext.ToString(), LogType.Add);
+            return ext;
+
         }
     }
 }

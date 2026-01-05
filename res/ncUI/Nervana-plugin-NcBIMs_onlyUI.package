@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ApplicationPackage
+  xmlns="hostApplicationPackage/v01"
+  Name="Nervana-plugin"
+ >
+  <Components>
+    <ConfigEntry
+      FileName="NervanaAllCommands.cfg"
+      FileType="CFG"
+    />
+  </Components>
+</ApplicationPackage>

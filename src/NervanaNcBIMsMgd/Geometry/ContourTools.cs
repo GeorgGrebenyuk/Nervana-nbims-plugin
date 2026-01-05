@@ -37,10 +37,15 @@ namespace NervanaNcBIMsMgd.Geometry
 
             if (offsetedPlines == null) return null;
 
+            using Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction();
+
             foreach (Entity offsetedPlineObject in offsetedPlines)
             {
                 Polyline? offsetedPline = offsetedPlineObject as Polyline;
                 if (offsetedPline == null) continue;
+
+                BIMStructureMgd.Common.Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, offsetedPline);
+                tr.Commit();
 
                 return offsetedPline.ToVertexes();
             }
