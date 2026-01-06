@@ -37,10 +37,5 @@ namespace NervanaNcMgd.Functions
 
             ps_Attrs.Visible = true;
         }
-
-        //public static void SetData(object? data)
-        //{
-        //    mExplorer = new Nervana_ExplorerSpace(data);
-        //}
     }
 }

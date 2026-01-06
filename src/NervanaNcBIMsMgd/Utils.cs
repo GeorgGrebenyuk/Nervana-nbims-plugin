@@ -6,12 +6,36 @@ using System.Threading.Tasks;
 using Teigha.DatabaseServices;
 using HostMgd.EditorInput;
 using HostMgd.ApplicationServices;
+using Teigha.Runtime;
+using BIMStructureMgd.DatabaseObjects;
 
 namespace NervanaNcBIMsMgd
 {
     internal class Utils
     {
         public static Document CurrentDoc => HostMgd.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+        public static ObjectIdCollection SelectObjectsByTypes2(Type[]? types)
+        {
+            using (Transaction tr = CurrentDoc.Database.TransactionManager.StartTransaction())
+            {
+                SelectionFilter? selFilter = null;
+                if (types != null && types.Any())
+                {
+                    TypedValue[] targetTypes = new TypedValue[types.Length];
+                    for(int typeIndex = 0;  typeIndex < types.Length; typeIndex++)
+                    {
+                        targetTypes[typeIndex] = new TypedValue((int)DxfCode.Start, RXObject.GetClass(types[typeIndex]).DxfName);
+                    }
+                    selFilter = new SelectionFilter(targetTypes);
+                }
+
+                PromptSelectionResult acSSPrompt;
+                if (types != null && types.Any()) acSSPrompt = CurrentDoc.Editor.SelectAll(selFilter);
+                else acSSPrompt = CurrentDoc.Editor.SelectAll();
+
+                return new ObjectIdCollection(acSSPrompt.Value.GetObjectIds());
+            }
+        }
         public static ObjectIdCollection SelectObjectsByTypes(Type[]? types, string message = "Выберите объекты ...")
         {
             Document acDoc = CurrentDoc;
@@ -57,7 +81,7 @@ namespace NervanaNcBIMsMgd
                     {
                         foreach (Type type in types)
                         {
-                            if (t.IsAssignableFrom(type))
+                            if (t.Equals(type))
                             {
                                 canAdd = true;
                                 break;

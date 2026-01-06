@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace NervanaNcBIMsMgd.UI.Controls
+{
+    /// <summary>
+    /// Interaction logic for Nervana_SelectEntityTypes.xaml
+    /// </summary>
+    public partial class Nervana_SelectEntityTypes : UserControl
+    {
+        public Nervana_SelectEntityTypes(bool isNCBIMsOnly = true)
+        {
+            InitializeComponent();
+
+            Type[] types;
+            if (isNCBIMsOnly) types = getTargetTypes(typeof(BIMStructureMgd.ObjectProperties.IParametricObject));
+            else types = getTargetTypes(typeof(Teigha.DatabaseServices.Polyline));
+
+            types = types.OrderBy(t=>t.Name).ToArray();
+            setTypesToListbox(types);
+
+            this.ListView_Types.SelectionMode = SelectionMode.Multiple;
+
+            this.Button_SaveTypes.Click += Button_SaveTypes_Click;
+            SelectedTypes = new Type[] { };
+        }
+
+        private void Button_SaveTypes_Click(object sender, RoutedEventArgs e)
+        {
+            var selItems = this.ListView_Types.SelectedItems;
+            if (selItems.Count < 1) return;
+            SelectedTypes = new Type[selItems.Count];
+            for (int typeIndex = 0; typeIndex < selItems.Count; typeIndex++)
+            {
+                SelectedTypes[typeIndex] = (Type)selItems[typeIndex];
+            }
+        }
+
+        private Type[] getTargetTypes(Type assType)
+        {
+           return assType.Assembly.GetTypes().Where(type => type.IsAssignableTo(assType)).ToArray();
+        }
+
+        private void setTypesToListbox(Type[] types)
+        {
+            this.ListView_Types.Items.Clear();
+            foreach (Type type in types)
+            {
+                this.ListView_Types.Items.Add(type);
+
+            }
+        }
+
+        public Type[] SelectedTypes;
+
+
+    }
+}
