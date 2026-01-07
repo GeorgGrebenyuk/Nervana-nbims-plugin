@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HostMgd.EditorInput;
 using Teigha.Geometry;
 using Teigha.DatabaseServices;
 
@@ -19,12 +20,14 @@ namespace NervanaNcBIMsMgd.Functions
 {
     enum RoomFuncVariant
     {
+        Nervana_PlaceRoomInContour,
         Nervana_CopyObjectsToRoom,
         Nervana_Room2Floor,
         Nervana_Floor2Room,
         Nervana_Polylines2Room,
         Nervana_LinkWallsToRoom,
         Nervana_LinkObjectsToRoom,
+
     }
     internal class RoomFuncs
     {
@@ -69,6 +72,9 @@ namespace NervanaNcBIMsMgd.Functions
         {
             switch (this._funcMode)
             {
+                case RoomFuncVariant.Nervana_PlaceRoomInContour:
+                    for_PlaceRoomInContour();
+                    break;
                 case RoomFuncVariant.Nervana_CopyObjectsToRoom:
                     for_CopyObjectsToRooms();
                     break;
@@ -86,6 +92,36 @@ namespace NervanaNcBIMsMgd.Functions
                     for_LinkObjectsWithRoom();
                     break;
             }
+        }
+
+        private void for_PlaceRoomInContour()
+        {
+            var CurrentDoc = HostMgd.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Editor ed = CurrentDoc.Editor;
+            PromptPointResult pointRes = ed.GetPoint("Укажите точку внутри помещения ");
+            if (pointRes.Status != PromptStatus.OK) return;
+
+            var plines = ed.TraceBoundary(pointRes.Value, false);
+
+            using (Transaction tr = CurrentDoc.Database.TransactionManager.StartTransaction())
+            {
+                foreach (DBObject obj in plines)
+                {
+                    Polyline? pline = obj as Polyline;
+                    if (pline == null || !pline.Closed) continue;
+
+                    var newRoom = SpaceEntityFactory.Create(pline, 3000);
+                    Utilities.AddEntityToDatabase(CurrentDoc.Database, tr, newRoom);
+
+                    // Больше одной границы и не нужно. Хотя, есть ещё вырезы,
+                    // но базовая механика всё равно не умеет делать островки
+                    break;
+                }
+                tr.Commit();
+            }
+
+            // и т.д. до прерывания через Esc
+            for_PlaceRoomInContour();
         }
 
         private void for_CopyObjectsToRooms()

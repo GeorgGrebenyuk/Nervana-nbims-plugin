@@ -67,6 +67,12 @@ namespace NervanaNcBIMsMgd
         {
             RoomFuncs.CreateFor(RoomFuncVariant.Nervana_LinkObjectsToRoom).Start();
         }
+
+        [CommandMethod("Nervana_PlaceRoomInContour")]
+        public void command_Nervana_PlaceRoomInContour()
+        {
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_PlaceRoomInContour).Start();
+        }
         #endregion
 
 
