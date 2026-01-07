@@ -21,5 +21,22 @@ namespace NervanaNcBIMsMgd.Extensions
             }
             return result;
         }
+
+        public static Point3d GetCentroid(this Polyline ncadPolyline)
+        {
+            int plineSize = ncadPolyline.NumberOfVertices;
+            double[] x = new double[plineSize];
+            double[] y = new double[plineSize];
+            double[] z = new double[plineSize];
+            for (int plineVertexIndex = 0; plineVertexIndex < plineSize; plineVertexIndex++)
+            {
+                Point3d plineVettex = ncadPolyline.GetPoint3dAt(plineVertexIndex);
+                x[plineVertexIndex] = plineVettex.X;
+                y[plineVertexIndex] = plineVettex.Y;
+                z[plineVertexIndex] = plineVettex.Z;
+            }
+
+            return new Point3d(x.Sum() / plineSize, y.Sum() / plineSize, z.Sum() / plineSize);
+        }
     }
 }

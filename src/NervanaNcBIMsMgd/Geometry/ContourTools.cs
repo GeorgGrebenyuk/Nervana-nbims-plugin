@@ -55,7 +55,6 @@ namespace NervanaNcBIMsMgd.Geometry
             tr.Commit();
 
             return targetPs;
-            return null;
         }
 
         private Point3d[] mVertexes;

@@ -1,15 +1,19 @@
-using Teigha.Runtime;
+using System.Linq;
+using System;
+using System.Runtime.InteropServices;
 
-using NervanaNcBIMsMgd.Functions;
+using Teigha.Runtime;
+using Teigha.Geometry;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Teigha.DatabaseServices;
-using System.Linq;
-using NervanaNcBIMsMgd.UI.Windows;
-using System;
+
 using BIMStructureMgd.DatabaseObjects;
-using System.Runtime.InteropServices;
-using Teigha.Geometry;
+using System.Net.NetworkInformation;
+
+using NervanaNcBIMsMgd.UI.Windows;
+using NervanaNcBIMsMgd.Functions;
+using NervanaCommonMgd.Configs;
 
 namespace NervanaNcBIMsMgd
 {
@@ -101,9 +105,12 @@ namespace NervanaNcBIMsMgd
             func.Start();
         }
 
-        
-
-
+        [CommandMethod("Nervana_Analytic_ShadowsBySunCreator")]
+        public void command_Nervana_Analytic_ShadowsBySunCreator()
+        {
+            ShadowsBySunCreator func = new ShadowsBySunCreator();
+            func.Start(new NervanaCommonMgd.Configs.ShadowCalcParametersConfig());
+        }
 
         #region Команды для курса по API
 

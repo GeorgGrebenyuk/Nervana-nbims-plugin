@@ -15,3 +15,4 @@
 Связать стены с помещением	Nervana_LinkWallsToRoom	Связывает стены с помещениями на зданном удалении от контура помещения	Помещения	SmallWithoutText	
 Связать объекты с помещением	Nervana_LinkObjectsToRoom	Связывает элементы с помещениями по условию их попадания в помещение	Помещения	SmallWithoutText	
 Обозреватель конструктивных сборок	Nervana_AssemblyRefsExplorer	Палитра со всеми конструктивными сборками в модели	Structure	SmallWithoutText	
+Построить тени	Nervana_Analytic_ShadowsBySunCreator	Рассчитывает затенение от объектов модели от заданного положения Солнца	Аналитика	SmallWithoutText	
