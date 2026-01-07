@@ -87,6 +87,16 @@ namespace NervanaNcBIMsMgd
             NervanaUI_PaletteManager2.CreatePalette();
         }
 
+        [CommandMethod("Nervana_OpeningsPlaces")]
+        public void command_Nervana_OpeningsPlaces()
+        {
+            OpeningPlacer func = new OpeningPlacer();
+            func.SetPlaces();
+            func.Start();
+        }
+
+        
+
 
 
         #region Команды для курса по API

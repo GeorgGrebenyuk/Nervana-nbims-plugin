@@ -1,0 +1,4 @@
+Handle	Point(XYZ)	Type	Size
+2683	0;9975.4068;2500	Circle	500
+2693	16565.5738;9975.4068;2500	Rectangle	250
+2737	3000;9500;-200	Rectangle	500

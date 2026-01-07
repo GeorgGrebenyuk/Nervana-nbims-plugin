@@ -22,7 +22,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Caption}" Width="150" Header="Имя параметра"></GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Caption}" Width="Auto" Header="Значение параметра"></GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Value}" Width="Auto" Header="Значение параметра"></GridViewColumn>
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
