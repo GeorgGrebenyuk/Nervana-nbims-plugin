@@ -149,6 +149,10 @@ namespace NervanaNcBIMsMgd.Functions
 
                         Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, opening);
 
+                        // Редактируем размеры отверстия
+                        opening.GetElementData().SetParameter("DIM_WIDTH", openingInfo.Size);
+                        opening.GetElementData().SetParameter("DIM_HEIGHT", openingInfo.Size);
+
                         // Присоединение проёма к стене возможно только после появления у него ID. То есть после добавление объекта в модель.
                         opening.ConnectToSurface(entityAsWall);
 
