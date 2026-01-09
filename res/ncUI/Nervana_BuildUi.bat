@@ -1,13 +1,12 @@
-:: Сборка всего конфига (для NBIMs)
-call "..\..\3rdparty\ncad_UI_creator_60\NC_UI_Creator_App.exe" "NervanaAllCommands.xml"
+:: Сборка конфига для nanoCAD BIM Строительство
+call "..\..\3rdparty\ncad_UI_creator_60\NC_UI_Creator_App.exe" "NervanaNBIMsCommands.xml"
 
-xcopy NervanaAllCommands* "..\..\bin\Debug" /Y /I
+xcopy NervanaNBIMsCommands* "..\..\bin\Debug" /Y /I
 xcopy Nervana-plugin-NcBIMs.package "..\..\bin\Debug" /Y /I
 xcopy Nervana-plugin-NcBIMs_onlyUI.package "..\..\bin\Debug" /Y /I
 
-xcopy NervanaAllCommands* "..\..\bin\Release" /Y /I
+xcopy NervanaNBIMsCommands* "..\..\bin\Release" /Y /I
 xcopy Nervana-plugin-NcBIMs.package "..\..\bin\Release" /Y /I
-xcopy Nervana-plugin-NcBIMs_onlyUI.package "..\..\bin\Release" /Y /I
 
 :: Сборка конфига только для платформы nanoCAD
 call "..\..\3rdparty\ncad_UI_creator_60\NC_UI_Creator_App.exe" "NervanaNcadCommands.xml"
@@ -28,6 +27,9 @@ xcopy "Nervana-plugin-NcCOM_OLD.package" "..\..\bin\Debug" /Y /I
 xcopy NervanaNcadCOMCommands* "..\..\bin\Release" /Y /I
 xcopy "Nervana-plugin-NcCOM.package" "..\..\bin\Release" /Y /I
 xcopy "Nervana-plugin-NcCOM_OLD.package" "..\..\bin\Release" /Y /I
+
+del "..\..\bin\Debug\*.txt"
+del "..\..\bin\Debug\*.xml"
 
 :: copy icons
 xcopy "..\icons" "..\..\bin\Debug\icons" /Y /I

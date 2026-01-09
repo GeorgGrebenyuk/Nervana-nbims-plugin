@@ -6,9 +6,9 @@
   <IconsRefPath_or_DLL>icons</IconsRefPath_or_DLL>
   <IconResVariant>LocalFile</IconResVariant>
   <IconFormatVariant>ICO</IconFormatVariant>
-  <RibbonName>Nervana</RibbonName>
-  <CSV_FilePath>NervanaNcadCOMCommands.txt</CSV_FilePath>
-  <CSV_Separator>9</CSV_Separator>
+  <RibbonName>Nervana COM</RibbonName>
+  <CSV_FilePath>NervanaNcadCOMCommands.csv</CSV_FilePath>
+  <CSV_Separator>44</CSV_Separator>
   <CSV_SkipHeader>true</CSV_SkipHeader>
   <DeleteCUIXFiles>true</DeleteCUIXFiles>
   <DeleteConfigFiles>false</DeleteConfigFiles>
