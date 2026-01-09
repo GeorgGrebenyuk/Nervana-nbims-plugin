@@ -1,6 +1,6 @@
 # Nervana-nbims-plugin
 
-Плагин для nanoCAD BIM Строительство и ModelStudio CS "Nervana" (автоматизация работы с параметрическими объектами, параметрами, прочие утилиты)
+Набор плагинов "Nervana" для платформы nanoCAD, линейки ModelStudio CS (COM API), nanoCAD BIM Строительство, CADLib Модель и Архив. 
 
 ![](./res/icons/Nervana_PluginMainLogo_256x256.png)
 
@@ -10,7 +10,7 @@
 
 Руководство по установке см. [в отдельной статье](./docs/src/INSTALL.md).
 
-Функции плагина разделены на 3 отдельных модуля (библиотеки):
+Функции плагина разделены на 4 отдельных модуля (библиотеки):
 
 * для платформы nanoCAD (22-26) -- перечень функций [тут](./res/ncUI/NervanaNcadCommands.csv);
 
@@ -18,11 +18,13 @@
 
 * для .NET API nanoCAD BIM Строительство (25.0) -- перечень функций [тут](./res/ncUI/NervanaAllCommands.txt);
 
-Каждый из модуль самостоятелен и не требует наличия модулей.
+* для CADLib (компонент МБСК);
+
+Каждый из модуль самостоятелен и не требует наличия модулей, кроме общей библиотеки "NervanaCommonMgd.dll".
 
 # Разработчику
 
-В качестве вспомогательной нагрузки для Visual Studio потребуется .NET Framework 4.8, .NET 6.0. Пакеты для nanoCAD взяты для NuGet-сервера (потребуется [разово настроить](https://docs.nanocad.ru/articles/#!nbim-sdk-24-1/ifce8336bf4de47f19bf22466cba6ae30) у себя на ПК по инструкции).
+В качестве вспомогательной нагрузки для Visual Studio потребуется .NET Framework 4.8, .NET 6.0. Пакеты для nanoCAD взяты для NuGet-сервера (потребуется [разово настроить](https://docs.nanocad.ru/articles/#!nbim-sdk-24-1/ifce8336bf4de47f19bf22466cba6ae30) у себя на ПК по инструкции). Библиотеки для CADLib пока вызываются локально из его папки установки `C:\Program Files (x86)\CSoft\Model Studio CS\Library\bin\x64`.
 
 Документация собирается через mdbook -- необходимо [скачать](https://github.com/rust-lang/mdBook/releases) исполняемый файл `mdbook.exe` и добавить его в переменную PATH (используется в скрипте генерации документации в `./docs/Nervana_docs_Build.bat`).
 

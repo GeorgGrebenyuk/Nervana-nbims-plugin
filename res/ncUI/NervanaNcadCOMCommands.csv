@@ -1,4 +1,2 @@
 Имя команды,Внутреннее имя,Описание,Подпункт,Размер в ленте,RibbonSplitButton
 Обозреватель параметров,Nervana_Parameters_ExplorerPalette,Обзор и редактирование параметров параметрического объекта на отдельной палитре,Параметры,LargeWithText,
-ФОП ➝ XML,Nervana_Parameters_RevitSharedParams2XML,Преобразование файла общих параметров Revit в CSoft-XML для БСК,Параметры,LargeWithText,Работа с ФОП
-XML ➝ ФОП,Nervana_Parameters_XML2RevitSharedParams,Преобразование CSoft-XML в файл общих параметров Revit,Параметры,LargeWithText,Работа с ФОП
