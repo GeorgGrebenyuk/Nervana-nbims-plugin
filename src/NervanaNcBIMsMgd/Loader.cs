@@ -79,6 +79,19 @@ namespace NervanaNcBIMsMgd
         }
         #endregion
 
+        #region Команды в группе "Утилиты"
+        [CommandMethod("Nervana_ImportElevation")]
+        public void command_Nervana_ImportElevation()
+        {
+            ElevationImporter func = new ElevationImporter();
+            func.SetLandXML(@"E:\Temp\NN_1896_Demo31.xml");
+            ElevationImporterSettings sett = new ElevationImporterSettings();
+            sett.SelectedSurfaceName = "1";
+            func.Import(sett);
+        }
+
+        #endregion
+
 
         public void Initialize()
         {
