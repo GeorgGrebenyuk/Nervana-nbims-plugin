@@ -30,6 +30,11 @@ namespace NervanaNcBIMsMgd.Extensions
             AngleRad = 0;
             //ProjectedCoordinateSystem = "";
         }
+
+        public override string ToString()
+        {
+            return $"{X};{Y};{Z};{AngleRad}";
+        }
     }
 
     internal static class SummaryInfoExtension

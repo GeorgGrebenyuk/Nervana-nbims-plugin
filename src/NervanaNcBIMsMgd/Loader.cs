@@ -84,7 +84,6 @@ namespace NervanaNcBIMsMgd
         public void command_Nervana_ImportElevation()
         {
             ElevationImporter func = new ElevationImporter();
-            func.SetLandXML(@"E:\Temp\NN_1896_Demo31.xml");
             ElevationImporterSettings sett = new ElevationImporterSettings();
             sett.SelectedSurfaceName = "1";
             func.Import(sett);
