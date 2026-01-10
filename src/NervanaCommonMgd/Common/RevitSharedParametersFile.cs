@@ -178,10 +178,10 @@ namespace NervanaCommonMgd.Common
                     $"{DataTypeRaw}\t" +
                     $"{DataCategory}\t" +
                     $"{Group}\t" +
-                    $"{Visible}\t" +
+                    $"{convertBoolToNum(Visible)}\t" +
                     $"{Description}\t" +
-                    $"{UserModifiable}\t" +
-                    $"{HideWhenNoValue}";
+                    $"{convertBoolToNum(UserModifiable)}\t" +
+                    $"{convertBoolToNum(HideWhenNoValue)}";
             }
 
         }
@@ -234,10 +234,10 @@ namespace NervanaCommonMgd.Common
                         DataTypeRaw = arr[3],
                         DataCategory = arr[4],
                         Group = int.Parse(arr[5]),
-                        Visible = bool.Parse(arr[6]),
+                        Visible = getBoolFromString(arr[6]),
                         Description = arr[7],
-                        UserModifiable = bool.Parse(arr[8]),
-                        HideWhenNoValue = bool.Parse(arr[9])
+                        UserModifiable = getBoolFromString(arr[8]),
+                        HideWhenNoValue = getBoolFromString(arr[9])
                     };
                     RevitSPF.Parameters.Add(paramDef);  
                 }
@@ -245,6 +245,18 @@ namespace NervanaCommonMgd.Common
 
 
             return RevitSPF;
+        }
+
+        private static bool getBoolFromString(string str)
+        {
+            if (str == "1") return true;
+            return false;
+        }
+
+        private static int convertBoolToNum(bool value)
+        {
+            if (value == true) return 1;
+            return 0;
         }
 
 
@@ -258,7 +270,7 @@ namespace NervanaCommonMgd.Common
             spf.AppendLine("*META\tVERSION\tMINVERSION");
             spf.AppendLine($"META\t{this.Metadata.Version.Major}\tMINVERSION{this.Metadata.Version.Minor}");
 
-            spf.AppendLine("*GROUP\tID\tNAME\n");
+            spf.AppendLine("*GROUP\tID\tNAME");
             foreach (var groupDef in this.Groups)
             {
                 spf.AppendLine(groupDef.ToString());

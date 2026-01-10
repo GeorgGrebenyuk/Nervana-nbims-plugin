@@ -33,6 +33,7 @@ namespace NervanaCADLibLibraryMgd
             this.nervanaGroupParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +59,7 @@ namespace NervanaCADLibLibraryMgd
             // 
             this.nervanaGroupParametersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem,
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2,
             this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem});
             this.nervanaGroupParametersToolStripMenuItem.Name = "nervanaGroupParametersToolStripMenuItem";
             this.nervanaGroupParametersToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
@@ -66,16 +68,23 @@ namespace NervanaCADLibLibraryMgd
             // nervanaCommandImportRevitSharedParametersFileToolStripMenuItem
             // 
             this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem.Name = "nervanaCommandImportRevitSharedParametersFileToolStripMenuItem";
-            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem.Size = new System.Drawing.Size(348, 22);
             this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem.Text = "Импорт Revit ФОП";
             this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem.Click += new System.EventHandler(this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem_Click);
             // 
             // nervanaCommandExportRevitSharedParametersFileToolStripMenuItem
             // 
             this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem.Name = "nervanaCommandExportRevitSharedParametersFileToolStripMenuItem";
-            this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem.Size = new System.Drawing.Size(348, 22);
             this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem.Text = "Экспорт Revit ФОП";
             this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem.Click += new System.EventHandler(this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem_Click);
+            // 
+            // nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2
+            // 
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2.Name = "nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2";
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2.Size = new System.Drawing.Size(194, 22);
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2.Text = "Импорт Revit ФОП (2)";
+            this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2.Click += new System.EventHandler(this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2_Click);
             // 
             // Nervana_CADLibLibraryLoader
             // 
@@ -100,5 +109,6 @@ namespace NervanaCADLibLibraryMgd
         private System.Windows.Forms.ToolStripMenuItem nervanaGroupParametersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nervanaCommandImportRevitSharedParametersFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nervanaCommandExportRevitSharedParametersFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2;
     }
 }

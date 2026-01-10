@@ -10,6 +10,7 @@ namespace NervanaCADLibLibraryMgd.Functions
     internal enum FuctionVariant
     {
         ImportRevitSharedParametersFile,
+        ImportRevitSharedParametersFile2,
         ExportRevitSharedParametersFile
 
 
@@ -24,10 +25,15 @@ namespace NervanaCADLibLibraryMgd.Functions
 
         public void RunCommand(FuctionVariant funcType)
         {
+            if (!CADLibData.CADLIB_Library.IsAccessible) return;
+
             switch (funcType)
             {
                 case FuctionVariant.ImportRevitSharedParametersFile:
-                    RevitSharedParamsIO.CreateInstance().Import();
+                    RevitSharedParamsIO.CreateInstance().Import(false);
+                    break;
+                case FuctionVariant.ImportRevitSharedParametersFile2:
+                    RevitSharedParamsIO.CreateInstance().Import(true);
                     break;
                 case FuctionVariant.ExportRevitSharedParametersFile:
                     RevitSharedParamsIO.CreateInstance().Export();

@@ -25,11 +25,9 @@ namespace NervanaCommonMgd.Common
         DateTime = 32
     }
 
+    [XmlRoot(ElementName = "PARAMETERS")]
     public partial class CSoftParametersFile
     {
-        
-
-        [DataContract(Name = "CATEGORY")]
         public class CategoryDefinition
         {
             [XmlAttribute("order")]
@@ -42,7 +40,17 @@ namespace NervanaCommonMgd.Common
             public string CategoryName { get; set; }
         }
 
-        [DataContract(Name = "VALUE")]
+        public class CategoryDefinitionColletion
+        {
+            [XmlElement("CATEGORY")]
+            public List<CategoryDefinition> CategoriesList { get; set; }
+
+            public CategoryDefinitionColletion()
+            {
+                CategoriesList = new List<CategoryDefinition>();
+            }
+        }
+
         public class ValueDefinition
         {
             [XmlElement("DATA")]
@@ -52,23 +60,77 @@ namespace NervanaCommonMgd.Common
             public string? Caption { get; set; }
         }
 
-        [DataContract(Name = "PARAMETER")]
+        public class ValueDefinitionColletion
+        {
+            [XmlElement("VALUE")]
+            public List<ValueDefinition> ValuesList { get; set; }
+
+            public ValueDefinitionColletion()
+            {
+                ValuesList = new List<ValueDefinition>();
+            }
+        }
+
+
+
         public class ParameterDefinition
         {
             [XmlAttribute("type")]
-            public CSoftParameterTypeVariant ParamType { get; set; }
+            public int ParamTypeRaw { get; set; }
+
+            [XmlIgnore]
+            public CSoftParameterTypeVariant ParamType
+            {
+                get
+                {
+                    return (CSoftParameterTypeVariant)Enum.Parse(typeof(CSoftParameterTypeVariant), ParamTypeRaw.ToString());
+                }
+                set
+                {
+                    ParamTypeRaw = (int)value;
+                }
+            }
 
             [XmlAttribute("prescision")]
             public int Prescision { get; set; }
 
             [XmlAttribute("readonly")]
-            public bool IsReadOnly { get; set; }
+            public int ReadOnly { get; set; }
+
+            [XmlIgnore]
+            public bool IsReadOnly
+            {
+                get
+                {
+                    if (ReadOnly == 1) return true;
+                    return false;
+                }
+                set
+                {
+                    if (value) ReadOnly = 1;
+                    else ReadOnly = 0;
+                }
+            }
 
             [XmlAttribute("accuracy")]
             public int Accuracy { get; set; }
 
             [XmlAttribute("valueType")]
-            public CSoftParameterTypeVariant ValueType { get; set; }
+            public int ValueTypeRaw { get; set; }
+
+            [XmlIgnore]
+            public CSoftParameterTypeVariant ValueType
+            {
+                get
+                {
+                    return (CSoftParameterTypeVariant)Enum.Parse(typeof(CSoftParameterTypeVariant), ValueTypeRaw.ToString());
+                }
+                set
+                {
+                    ValueTypeRaw = (int)value;
+                }
+            }
+
 
             [XmlAttribute("sysNameMeasureUnitBase")]
             public string SysNameMeasureUnitBase { get; set; }
@@ -86,32 +148,37 @@ namespace NervanaCommonMgd.Common
             [XmlElement("DEFAULT")]
             public string? DefaultValue { get; set; }
 
-            [XmlArray("CATEGORIES")]
-            public List<CategoryDefinition> Categories { get; set; }
+            [XmlElement("CATEGORIES")]
+            public CategoryDefinitionColletion Categories { get; set; }
 
-            [XmlArray("VALUES")]
-            public List<ValueDefinition>? Values { get; set; }
+            [XmlElement("VALUES")]
+            public ValueDefinitionColletion? Values { get; set; }
 
             public static ParameterDefinition CreateDefault()
             {
                 ParameterDefinition paramDef = new ParameterDefinition();
-                paramDef.ParamType = CSoftParameterTypeVariant.String;
+                paramDef.ParamTypeRaw = (int)CSoftParameterTypeVariant.String;
                 paramDef.Prescision = -1;
                 paramDef.IsReadOnly = false;
                 paramDef.Accuracy = -1;
-                paramDef.ValueType = CSoftParameterTypeVariant.String;
+                paramDef.ValueTypeRaw = (int)CSoftParameterTypeVariant.String;
                 paramDef.SysNameMeasureUnit = "";
                 paramDef.SysNameMeasureUnitBase = "";
 
-                paramDef.Categories = new List<CategoryDefinition>();
+                paramDef.Categories = new CategoryDefinitionColletion();
 
                 return paramDef;
 
             }
+
+            public ParameterDefinition()
+            {
+
+            }
         }
 
-        [XmlArray("PARAMETERS")]
-        public List<ParameterDefinition> Parameters { get; set;}
+        [XmlElement("PARAMETER")]
+        public List<ParameterDefinition> Parameters { get; set; }
 
         public CSoftParametersFile()
         {
@@ -120,12 +187,26 @@ namespace NervanaCommonMgd.Common
 
         public static CSoftParametersFile? LoadFrom(string path)
         {
-            return (CSoftParametersFile?)NervanaCommonMgd.Configs.IConfigBase.LoadFrom<CSoftParametersFile>(path);
+            if (File.Exists(path))
+            {
+                using (var stream = File.OpenRead(path))
+                {
+
+                    var serializer = new XmlSerializer(typeof(CSoftParametersFile));
+                    return (CSoftParametersFile)serializer.Deserialize(stream);
+                }
+            }
+            return null;
         }
 
         public void Save(string path)
         {
-            NervanaCommonMgd.Configs.IConfigBase.SaveTo(path, this);
+            using (var writer = new StreamWriter(path))
+            {
+                var serializer = new XmlSerializer(typeof(CSoftParametersFile));
+                serializer.Serialize(writer, this);
+                writer.Flush();
+            }
         }
 
     }

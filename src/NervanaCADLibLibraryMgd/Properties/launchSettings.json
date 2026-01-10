@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CL Lib": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\CSoft\\Model Studio CS\\3.0\\Library\\bin\\x64\\CADLib.exe"
+    }
+  }
+}

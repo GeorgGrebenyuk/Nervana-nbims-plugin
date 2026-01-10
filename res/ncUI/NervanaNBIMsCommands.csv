@@ -1,6 +1,6 @@
 Имя команды,Внутреннее имя,Описание,Подпункт,Размер в ленте,RibbonSplitButton
 Расставить отверстия,Nervana_OpeningsPlaces,Расставляет отверстия в стенах и в перекрытиях по файлу,Утилиты,SmallWithoutText,
-Обозреватель параметров,Nervana_ParametersEditor,Обзор и редактирования параметров одного параметрического объекта,Параметры,LargeWithText,
+ФОП ➝ XML,Nervana_Parameters_RevitSharedParams2XML,Преобразование файла общих параметров Revit в CSoft-XML для БСК,Параметры,LargeWithText,Работа с ФОП
 Создать помещение,Nervana_PlaceRoomInContour,Автоматически определяет контур для выбранной точки и строит помещение,Помещения,LargeWithText,
 Расставить в помещениях,Nervana_CopyObjectsToRoom,Копирование выбранных объектов в каждое из заданных помещений,Помещения,SmallWithoutText,
 Перекрытие по помещению,Nervana_Room2Floor,Создает перекрытия по контуру помещения,Помещения,SmallWithoutText,

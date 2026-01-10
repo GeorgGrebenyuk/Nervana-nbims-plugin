@@ -25,6 +25,11 @@ namespace NervanaCADLibLibraryMgd
             FuncManager.CreateInstance().RunCommand(FuctionVariant.ImportRevitSharedParametersFile);
         }
 
+        private void nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            FuncManager.CreateInstance().RunCommand(FuctionVariant.ImportRevitSharedParametersFile2);
+        }
+
         private void nervanaCommandExportRevitSharedParametersFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FuncManager.CreateInstance().RunCommand(FuctionVariant.ExportRevitSharedParametersFile);
@@ -43,7 +48,10 @@ namespace NervanaCADLibLibraryMgd
         public void TrackInterfaceItems(InterfaceTracker tracker)
         {
             tracker.Add(new InterfaceItemState(this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem, LibConnectionState.Connected, LibFolderState.DoesNotMatter, LibObjectState.DoesNotMatter, LibRequiredPermission.EditParametersRegistry));
+            tracker.Add(new InterfaceItemState(this.nervanaCommandImportRevitSharedParametersFileToolStripMenuItem2, LibConnectionState.Connected, LibFolderState.DoesNotMatter, LibObjectState.DoesNotMatter, LibRequiredPermission.EditParametersRegistry));
             tracker.Add(new InterfaceItemState(this.nervanaCommandExportRevitSharedParametersFileToolStripMenuItem, LibConnectionState.Connected, LibFolderState.DoesNotMatter, LibObjectState.DoesNotMatter, LibRequiredPermission.EditParametersRegistry));
         }
+
+        
     }
 }
