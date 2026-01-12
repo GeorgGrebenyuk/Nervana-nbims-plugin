@@ -12,9 +12,10 @@ using BIMStructureMgd.DatabaseObjects;
 using BIMStructureMgd.Common;
 using BIMStructureMgd.ObjectProperties;
 
-using NervanaNcBIMsMgd.Extensions;
-using NervanaNcBIMsMgd.Geometry;
 using NervanaCommonMgd;
+using NervanaNcMgd.Common;
+using NervanaNcMgd.Common.Geometry;
+using NervanaNcBIMsMgd.Extensions;
 
 namespace NervanaNcBIMsMgd.Functions
 {
@@ -130,7 +131,7 @@ namespace NervanaNcBIMsMgd.Functions
             if (this._sourceObjects2 == null) return;
             Dictionary<long, Point3d> room2centroid = new Dictionary<long, Point3d>();
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (ObjectId spaceEntId in this._sourceObjects2)
                 {
@@ -158,7 +159,7 @@ namespace NervanaNcBIMsMgd.Functions
 
                         ParametricEntityInstanceCopy.TransformBy(Matrix3d.Displacement(roomVector - ParametricEntityInstancePlacement));
 
-                        Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, ParametricEntityInstanceCopy);
+                        Utilities.AddEntityToDatabase(CommonUtils.CurrentDoc.Database, tr, ParametricEntityInstanceCopy);
 
                         TraceWriter.Log($"ParametricEntity ADDED success", LogType.Add);
 
@@ -174,7 +175,7 @@ namespace NervanaNcBIMsMgd.Functions
         {
             if (this._sourceObjects1 == null) return;
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (ObjectId floorEntId in this._sourceObjects1)
                 {
@@ -182,7 +183,7 @@ namespace NervanaNcBIMsMgd.Functions
                     if (floorInstance == null) continue;
 
                     var newRoom = SpaceEntityFactory.Create(floorInstance.GetContour(), 3000);
-                    Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, newRoom);
+                    Utilities.AddEntityToDatabase(CommonUtils.CurrentDoc.Database, tr, newRoom);
                 }
                 tr.Commit();
             }
@@ -192,7 +193,7 @@ namespace NervanaNcBIMsMgd.Functions
         {
             if (this._sourceObjects1 == null) return;
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (ObjectId spaceEntId in this._sourceObjects1)
                 {
@@ -200,7 +201,7 @@ namespace NervanaNcBIMsMgd.Functions
                     if (spaceEntInstance == null) continue;
 
                     var newFloor = BuildingSlabFactory.Create(spaceEntInstance.GetFloorContours().First(), 200);
-                    Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, newFloor);
+                    Utilities.AddEntityToDatabase(CommonUtils.CurrentDoc.Database, tr, newFloor);
                 }
                 tr.Commit();
             }
@@ -210,7 +211,7 @@ namespace NervanaNcBIMsMgd.Functions
         {
             if (this._sourceObjects1 == null) return;
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (ObjectId plineEntId in this._sourceObjects1)
                 {
@@ -218,7 +219,7 @@ namespace NervanaNcBIMsMgd.Functions
                     if (polylineInstance == null) continue;
 
                     var newRoom = SpaceEntityFactory.Create(polylineInstance, 3000);
-                    Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, newRoom);
+                    Utilities.AddEntityToDatabase(CommonUtils.CurrentDoc.Database, tr, newRoom);
                 }
                 tr.Commit();
             }
@@ -235,13 +236,12 @@ namespace NervanaNcBIMsMgd.Functions
 
             double trimmedPline = 800.0;
 
-            //if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
-            //{
-            //    double? trimmedPline2 = Utils.GetUsersDoubleInput("Величина смещения для анализируемого контура помещения");
-            //    if (trimmedPline2 == null || trimmedPline2 < 0) trimmedPline = 100.0;
-            //}
+            if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
+            {
+                trimmedPline = UserInput.GetUserInput("Величина смещения для анализируемого контура помещения", 800.0);
+            }
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 int spaceEntCounter = 0;
                 foreach (ObjectId spaceEntId in this._sourceObjects2)
@@ -321,7 +321,7 @@ namespace NervanaNcBIMsMgd.Functions
             // 3. Для найденных соответвий заполняем свойства проверяемых объектов : добавляем привязку к помещениям
             // Делаем в теле транзакций
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (var structObject2RoomInfo in structObject2Room)
                 {

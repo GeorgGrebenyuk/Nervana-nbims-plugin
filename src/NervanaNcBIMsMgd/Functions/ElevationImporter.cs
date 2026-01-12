@@ -9,12 +9,15 @@ using System.Xml.Linq;
 
 using Teigha.Geometry;
 using Teigha.DatabaseServices;
-
-using NervanaNcBIMsMgd.Extensions;
-using NervanaNcBIMsMgd.Geometry;
-using NervanaCommonMgd;
-using BIMStructureMgd.DatabaseObjects;
 using HostMgd.EditorInput;
+
+using BIMStructureMgd.DatabaseObjects;
+
+using NervanaCommonMgd;
+using NervanaNcMgd.Common;
+using NervanaNcBIMsMgd.Extensions;
+using NervanaNcMgd.Common.Geometry;
+
 
 namespace NervanaNcBIMsMgd.Functions
 {
@@ -46,12 +49,17 @@ namespace NervanaNcBIMsMgd.Functions
     {
         public ElevationImporter()
         {
-            this.pBuildingTransformInfo = Utils.CurrentDoc.Database.SummaryInfo.GetTransformPararameters();
+            this.pBuildingTransformInfo = CommonUtils.CurrentDoc.Database.SummaryInfo.GetTransformPararameters();
             this.pAngleSinus = Math.Sin(this.pBuildingTransformInfo.AngleRad);
             this.pAngleCos = Math.Cos(this.pBuildingTransformInfo.AngleRad);
 
             TraceWriter.Log($"pBuildingTransformInfo {pBuildingTransformInfo.ToString()}");
             readSubDMesh();
+
+            double? pIsolineSteps2 = UserInput.GetUserInput("Укажите шаг горизонталей", 0.5);
+            if (pIsolineSteps2 != null && pIsolineSteps2.Value > 0) this.pIsolineSteps = pIsolineSteps2.Value;
+
+
         }
 
 
@@ -71,7 +79,7 @@ namespace NervanaNcBIMsMgd.Functions
         private void readSubDMesh()
         {
             // Выбрать в модели сеть
-            Editor ed = Utils.CurrentDoc.Editor;
+            Editor ed = CommonUtils.CurrentDoc.Editor;
 
             PromptEntityOptions entSelectionSettings = new PromptEntityOptions("Выберите сеть");
             entSelectionSettings.AddAllowedClass(typeof(SubDMesh), true);
@@ -79,7 +87,7 @@ namespace NervanaNcBIMsMgd.Functions
             PromptEntityResult entSelection = ed.GetEntity(entSelectionSettings);
             if (entSelection.Status != PromptStatus.OK) return;
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 SubDMesh? meshEntity = tr.GetObject(entSelection.ObjectId, OpenMode.ForRead) as SubDMesh;
                 if (meshEntity == null) return;
@@ -116,7 +124,7 @@ namespace NervanaNcBIMsMgd.Functions
             }
         }
 
-        public void Import(ElevationImporterSettings settings)
+        public void Import(ElevationImporterSettings settings, bool asBuildingSlabs = true)
         {
             if (mLandXML_Surface == null) return;
 
@@ -172,11 +180,11 @@ namespace NervanaNcBIMsMgd.Functions
             TraceWriter.Log($"Generated {isolines.Count} contour segments");
             TraceWriter.Log($"Connected into {polylines.Count} polylines");
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 // Open the Block table for read
                 BlockTable? acBlkTbl;
-                acBlkTbl = tr.GetObject(Utils.CurrentDoc.Database.BlockTableId,
+                acBlkTbl = tr.GetObject(CommonUtils.CurrentDoc.Database.BlockTableId,
                                                 OpenMode.ForRead) as BlockTable;
                 if (acBlkTbl == null) return;
 
@@ -189,27 +197,65 @@ namespace NervanaNcBIMsMgd.Functions
                 int counter = 0;
                 foreach (var polyline in polylines)
                 {
-                    List<Point3d> polyline_CHull = DelaunayTriangulation.CalculateConvexHull(polyline);
+                    List<Point3d> targetContourRaw = DelaunayTriangulation.CalculateConvexHull(polyline);
 
                     //TraceWriter.Log($"Prepare create slab {polyline_CHull.Count} vertices raw");
                     //TraceWriter.Log($"Z = {polyline_CHull.First().Z}");
 
                     int skippedPos = 0;
-                    if (polyline_CHull.First() == polyline_CHull.Last()) skippedPos = 1;
+                    if (targetContourRaw.First() == targetContourRaw.Last()) skippedPos = 1;
 
-                    var polyline_flat = polyline_CHull.Skip(skippedPos).Select(p => new Point2d(p.X, p.Y)).ToList();
-                    if (polyline_flat.Count < 3) continue;
+                    List<Point3d> targetContourRaw2 = targetContourRaw.Skip(skippedPos).ToList();
+
+                    List<Point2d> targetContourFlat = targetContourRaw2.Select(p => new Point2d(p.X, p.Y)).ToList();
+                    if (targetContourFlat.Count < 3) continue;
 
                     //TraceWriter.Log($"Prepare create slab {polyline_flat.Count} vertices after check");
 
                     try
                     {
-                        BuildingSlab floorInstance = BuildingSlabFactory.Create(polyline_flat, settings.IsolinesStep);
-                        floorInstance.TransformBy(Matrix3d.Displacement(new Vector3d(0, 0, polyline_CHull.First().Z + 300.0) - 
-                            new Vector3d(0, 0, floorInstance.BasePoint.Z) ));
+                        Entity? createdFloorEntity = null;
+                        if (asBuildingSlabs)
+                        {
+                            BuildingSlab createdFloorAsSlab = BuildingSlabFactory.Create(targetContourFlat, settings.IsolinesStep);
+                            createdFloorAsSlab.TransformBy(Matrix3d.Displacement(new Vector3d(0, 0, targetContourRaw2.First().Z + 300.0) -
+                            new Vector3d(0, 0, createdFloorAsSlab.BasePoint.Z)));
 
-                        acBlkTblRec.AppendEntity(floorInstance);
-                        tr.AddNewlyCreatedDBObject(floorInstance, true);
+                            createdFloorEntity = createdFloorAsSlab;
+                        }
+                        else
+                        {
+                            var plineResult = CommonTools.ConvertVerticesFromList(targetContourRaw2);
+                            Polyline2d polyline_flat2 = new Polyline2d(Poly2dType.SimplePoly, plineResult.Item1, 0, true, 0, 0, plineResult.Item2);
+
+                            // Create region from polyline first
+                            DBObjectCollection curves = new DBObjectCollection();
+                            curves.Add(polyline_flat2.Clone() as Curve);
+
+                            DBObjectCollection regions = new DBObjectCollection();
+                            try
+                            {
+                                regions = Region.CreateFromCurves(curves);
+
+                                Solid3d solid = new Solid3d();
+                                if (regions.Count > 0 && regions[0] is Region region)
+                                {
+                                    // Extrude the region
+                                    solid.Extrude(region, settings.IsolinesStep, 0);
+                                }
+                                solid.TransformBy(Matrix3d.Displacement(new Vector3d(0, 0, targetContourRaw.First().Z + 300.0) -
+                           new Vector3d(0, 0, 0)));
+
+                                createdFloorEntity = solid;
+                            }
+                            catch { }
+                        }
+
+                        if (createdFloorEntity == null) continue;
+                        
+
+                        acBlkTblRec.AppendEntity(createdFloorEntity);
+                        tr.AddNewlyCreatedDBObject(createdFloorEntity, true);
                         //TraceWriter.Log($"Create slab success");
                     }
                     catch (Exception ex)
@@ -228,6 +274,8 @@ namespace NervanaNcBIMsMgd.Functions
 
         private double pAngleSinus;
         private double pAngleCos;
+
+        private double pIsolineSteps = 0.5;
 
         private LandXML_SurfaceDef? mLandXML_Surface;
         public bool IsXml = false;

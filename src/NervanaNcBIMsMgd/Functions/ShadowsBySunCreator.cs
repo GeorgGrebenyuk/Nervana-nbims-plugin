@@ -10,11 +10,12 @@ using Teigha.Geometry;
 
 using BIMStructureMgd.DatabaseObjects;
 
+using NervanaCommonMgd;
+using NervanaNcMgd.Common;
+using NervanaNcMgd.Common.Geometry;
 using NervanaNcBIMsMgd.Extensions;
 using NervanaNcBIMsMgd.Functions.SolarCalc;
-using NervanaNcBIMsMgd.Geometry;
 using NervanaCommonMgd.Configs;
-using NervanaCommonMgd;
 
 namespace NervanaNcBIMsMgd.Functions
 {
@@ -54,7 +55,7 @@ namespace NervanaNcBIMsMgd.Functions
 
             List<ShadowAnalyzedItem> analyzedPoints = new List<ShadowAnalyzedItem>();
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (ObjectId entId in analyzedObjects)
                 {
@@ -107,11 +108,11 @@ namespace NervanaNcBIMsMgd.Functions
 
             TraceWriter.Log($"Анализ точек солнца закончен!. Найдено {analyzedPoints.Count} точек");
 
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 // Open the Block table for read
                 BlockTable? acBlkTbl;
-                acBlkTbl = tr.GetObject(Utils.CurrentDoc.Database.BlockTableId,
+                acBlkTbl = tr.GetObject(CommonUtils.CurrentDoc.Database.BlockTableId,
                                                 OpenMode.ForRead) as BlockTable;
                 if (acBlkTbl == null) return;
 

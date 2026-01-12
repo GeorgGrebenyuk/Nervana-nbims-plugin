@@ -18,7 +18,9 @@ namespace NervanaCommonMgd
     {
         public static void Log(string message, LogType t = LogType.Add)
         {
+#if DEBUG
             System.Diagnostics.Trace.WriteLine($"{t.ToString()}: {message}");
+#endif
         }
     }
 }

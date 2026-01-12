@@ -8,7 +8,7 @@ using Teigha.Geometry;
 
 using NervanaCommonMgd;
 
-namespace NervanaNcBIMsMgd.Geometry
+namespace NervanaNcMgd.Common.Geometry
 {
     internal static class PointInContourChecking
     {

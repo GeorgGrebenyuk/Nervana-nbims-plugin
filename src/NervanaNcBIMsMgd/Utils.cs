@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Teigha.DatabaseServices;
+
 using HostMgd.EditorInput;
 using HostMgd.ApplicationServices;
 using Teigha.Runtime;
+using Teigha.DatabaseServices;
+
 using BIMStructureMgd.DatabaseObjects;
+
+using NervanaNcMgd.Common;
 
 namespace NervanaNcBIMsMgd
 {
     internal class Utils
     {
-        public static Document CurrentDoc => HostMgd.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
         public static ObjectIdCollection SelectObjectsByTypes2(Type[]? types)
         {
-            using (Transaction tr = CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 SelectionFilter? selFilter = null;
                 if (types != null && types.Any())
@@ -30,15 +33,15 @@ namespace NervanaNcBIMsMgd
                 }
 
                 PromptSelectionResult acSSPrompt;
-                if (types != null && types.Any()) acSSPrompt = CurrentDoc.Editor.SelectAll(selFilter);
-                else acSSPrompt = CurrentDoc.Editor.SelectAll();
+                if (types != null && types.Any()) acSSPrompt = CommonUtils.CurrentDoc.Editor.SelectAll(selFilter);
+                else acSSPrompt = CommonUtils.CurrentDoc.Editor.SelectAll();
 
                 return new ObjectIdCollection(acSSPrompt.Value.GetObjectIds());
             }
         }
         public static ObjectIdCollection SelectObjectsByTypes(Type[]? types, string message = "Выберите объекты ...")
         {
-            Document acDoc = CurrentDoc;
+            Document acDoc = CommonUtils.CurrentDoc;
             Editor ed = acDoc.Editor;
 
             ObjectIdCollection ids = new ObjectIdCollection();
@@ -94,14 +97,6 @@ namespace NervanaNcBIMsMgd
             return objects;
         }
 
-        public static double? GetUsersDoubleInput(string message)
-        {
-            Document acDoc = CurrentDoc;
-            Editor ed = acDoc.Editor;
-
-            PromptDoubleResult res = ed.GetDouble(message);
-            if (res.Status == PromptStatus.OK) return res.Value;
-            return null;
-        }
+       
     }
 }

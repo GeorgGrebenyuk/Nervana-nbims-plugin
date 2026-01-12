@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Teigha.DatabaseServices;
 using Teigha.Geometry;
 
-namespace NervanaNcBIMsMgd.Geometry
+namespace NervanaNcMgd.Common.Geometry
 {
-    internal static class CommonTools
+    public static class CommonTools
     {
         public static (Point3dCollection, DoubleCollection) ConvertVerticesFromList(List<Point3d> vertices)
         {

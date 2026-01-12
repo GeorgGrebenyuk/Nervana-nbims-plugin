@@ -11,8 +11,10 @@ using Teigha.Geometry;
 
 using BIMStructureMgd.Common;
 using BIMStructureMgd.DatabaseObjects;
-using NervanaNcBIMsMgd.Extensions;
+
 using NervanaCommonMgd;
+using NervanaNcMgd.Common;
+using NervanaNcBIMsMgd.Extensions;
 
 namespace NervanaNcBIMsMgd.Functions
 {
@@ -77,22 +79,22 @@ namespace NervanaNcBIMsMgd.Functions
             openFileDialog.Filter = "Текстовый файл (*.TXT, *.xml) | *.TXT;*.txt";
 
 #if DEBUG
-            SetPlaces(@"C:\Users\Georg\Documents\GitHub\Nervana-nbims-plugin\tests\NervanaTest_OpeningsInfo1.txt");
+            //SetPlaces(@"C:\Users\Georg\Documents\GitHub\Nervana-nbims-plugin\tests\NervanaTest_OpeningsInfo1.txt");
 #endif
-            //if (openFileDialog.ShowDialog() == true)
-            //{
-            //    SetPlaces(openFileDialog.FileName);
-            //}
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SetPlaces(openFileDialog.FileName);
+            }
         }
 
         public void Start()
         {
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 foreach (OpeningInfo openingInfo in this.mPlaces)
                 {
                     Handle entityHandle = new Handle(openingInfo.Handle);
-                    ObjectId entityObjectId = Utils.CurrentDoc.Database.GetObjectId(false, entityHandle, 0);
+                    ObjectId entityObjectId = CommonUtils.CurrentDoc.Database.GetObjectId(false, entityHandle, 0);
                     if (!entityObjectId.IsValid || entityObjectId.IsErased) continue;
 
                     DBObject entityInstance = tr.GetObject(entityObjectId, OpenMode.ForWrite);
@@ -114,7 +116,7 @@ namespace NervanaNcBIMsMgd.Functions
                         if (objects == null ) continue;
                         if (!objects.Any())
                         {
-                            Utils.CurrentDoc.Editor.WriteMessage("Не было найдено объектов для данных условий!");
+                            CommonUtils.CurrentDoc.Editor.WriteMessage("Не было найдено объектов для данных условий!");
                             continue;
                         }
 
@@ -147,7 +149,7 @@ namespace NervanaNcBIMsMgd.Functions
                         TraceWriter.Log("opening.Position = " + opening.Position.ToString());
                         TraceWriter.Log("wall.Length = " + entityAsWall.Length.ToString());
 
-                        Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, opening);
+                        Utilities.AddEntityToDatabase(CommonUtils.CurrentDoc.Database, tr, opening);
 
                         // Редактируем размеры отверстия
                         opening.GetElementData().SetParameter("DIM_WIDTH", openingInfo.Size);
@@ -172,6 +174,8 @@ namespace NervanaNcBIMsMgd.Functions
                             //new Point2d(openingInfo.Position.X - side, openingInfo.Position.Y - side)
                         };
                         entytyAsFloor.CutContour(contourPoints);
+
+                        
 
                         TraceWriter.Log("CutContour");
                     }

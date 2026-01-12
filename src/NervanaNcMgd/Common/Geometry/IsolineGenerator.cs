@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Teigha.Geometry;
 
-namespace NervanaNcBIMsMgd.Geometry
+namespace NervanaNcMgd.Common.Geometry
 {
     public class ContourSegment
     {

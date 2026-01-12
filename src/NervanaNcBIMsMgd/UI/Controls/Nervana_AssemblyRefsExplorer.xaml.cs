@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics.CodeAnalysis;
+using System.Collections.ObjectModel;
 
 using Teigha.DatabaseServices;
 using HostMgd.ApplicationServices;
@@ -22,8 +24,8 @@ using BIMStructureMgd.DatabaseObjects;
 using BIMStructureMgd.Common;
 
 using NervanaCommonMgd;
-using System.Diagnostics.CodeAnalysis;
-using System.Collections.ObjectModel;
+using NervanaNcMgd.Common;
+
 
 namespace NervanaNcBIMsMgd.UI.Controls
 {
@@ -79,11 +81,11 @@ namespace NervanaNcBIMsMgd.UI.Controls
             if (selectedInfo == null) return;
 
             // Нужно предложить Пользователю ввести точку, куда будет скопирована данная К.Сборка
-            HostMgd.EditorInput.Editor ed = Utils.CurrentDoc.Editor;
+            HostMgd.EditorInput.Editor ed = CommonUtils.CurrentDoc.Editor;
             var point = ed.GetPoint("Введите точку вставки конструктивной сборки ... ");
             if (point.Status != HostMgd.EditorInput.PromptStatus.OK) return;
 
-            using Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction();
+            using Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction();
 
             ConstructionAssemblyRef? assRef = tr.GetObject(selectedInfo.Id, OpenMode.ForWrite) as ConstructionAssemblyRef;
             if (assRef == null) return;
@@ -99,7 +101,7 @@ namespace NervanaNcBIMsMgd.UI.Controls
             TraceWriter.Log($"newPlace {newPlace.ToString()}", LogType.Add);
             assRef.TransformBy(Matrix3d.Displacement(newPlace));
             TraceWriter.Log($"ParametricEntity Pre add", LogType.Add);
-            Utilities.AddEntityToDatabase(Utils.CurrentDoc.Database, tr, assRefCopy);
+            Utilities.AddEntityToDatabase(CommonUtils.CurrentDoc.Database, tr, assRefCopy);
             TraceWriter.Log($"ParametricEntity Post add", LogType.Add);
             tr.Commit();
         }
@@ -122,12 +124,12 @@ namespace NervanaNcBIMsMgd.UI.Controls
         private void updateAssemblyRefList()
         {
             mAssemblyRefs = new ObservableCollection<AssemblyRefInfo>();
-            if (Utils.CurrentDoc == null) return;
-            using (Transaction tr = Utils.CurrentDoc.Database.TransactionManager.StartTransaction())
+            if (CommonUtils.CurrentDoc == null) return;
+            using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
                 // Open the Block table for read
                 BlockTable? acBlkTbl;
-                acBlkTbl = tr.GetObject(Utils.CurrentDoc.Database.BlockTableId,
+                acBlkTbl = tr.GetObject(CommonUtils.CurrentDoc.Database.BlockTableId,
                                                 OpenMode.ForRead) as BlockTable;
                 if (acBlkTbl == null) return;
 

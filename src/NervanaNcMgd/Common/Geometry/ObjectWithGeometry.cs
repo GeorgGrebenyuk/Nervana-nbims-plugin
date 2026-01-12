@@ -8,9 +8,9 @@ using Teigha.Geometry;
 
 using NervanaCommonMgd;
 
-namespace NervanaNcBIMsMgd.Geometry
+namespace NervanaNcMgd.Common.Geometry
 {
-    enum GeometryVariant
+    public enum GeometryVariant
     {
         Point,
         Contour,
@@ -20,7 +20,7 @@ namespace NervanaNcBIMsMgd.Geometry
     /// <summary>
     /// Представление объекта модели с вырожденной геометрией
     /// </summary>
-    internal class ObjectWithGeometry
+    public class ObjectWithGeometry
     {
         public ObjectId ObjectId { get; set; }
         public GeometryVariant GeometryType { get; set; }

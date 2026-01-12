@@ -80,12 +80,11 @@ namespace NervanaNcBIMsMgd
         #endregion
 
         #region Команды в группе "Утилиты"
-        [CommandMethod("Nervana_ImportElevation")]
-        public void command_Nervana_ImportElevation()
+        [CommandMethod("Nervana_MakeElevationConceptual")]
+        public void command_Nervana_MakeElevationConceptual()
         {
             ElevationImporter func = new ElevationImporter();
             ElevationImporterSettings sett = new ElevationImporterSettings();
-            sett.SelectedSurfaceName = "1";
             func.Import(sett);
         }
 
@@ -109,8 +108,8 @@ namespace NervanaNcBIMsMgd
             NervanaUI_PaletteManager2.CreatePalette();
         }
 
-        [CommandMethod("Nervana_OpeningsPlaces")]
-        public void command_Nervana_OpeningsPlaces()
+        [CommandMethod("Nervana_OpeningsPlacer")]
+        public void command_Nervana_OpeningsPlacer()
         {
             OpeningPlacer func = new OpeningPlacer();
             func.SetPlaces();

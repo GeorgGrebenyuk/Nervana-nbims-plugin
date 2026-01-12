@@ -25,6 +25,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\NervanaCommonMgd\NervanaCommonMgd.csproj" />
+        <ProjectReference Include="..\NervanaNcMgd\NervanaNcMgd.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
