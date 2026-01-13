@@ -24,7 +24,7 @@ namespace NervanaNcBIMsMgd.Functions
         Nervana_Room_CreateByAutoContour,
         Nervana_Room_CopyObjectsTo,
         Nervana_Room_ToFloors,
-        Nervana_Room_CreteByFloors,
+        Nervana_Room_CreateByFloors,
         Nervana_Room_CreateByPlines,
         Nervana_Room_LinkWalls,
         Nervana_Room_LinkObjects,
@@ -52,7 +52,7 @@ namespace NervanaNcBIMsMgd.Functions
                 func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(ParametricEntity) }, "Выберите параметрические объекты для копирования ");
                 func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             }
-            else if (mode == RoomFuncVariant.Nervana_Room_CreteByFloors) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingSlab) }, "Выберите перекрытия ");
+            else if (mode == RoomFuncVariant.Nervana_Room_CreateByFloors) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingSlab) }, "Выберите перекрытия ");
             else if (mode == RoomFuncVariant.Nervana_Room_ToFloors) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             else if (mode == RoomFuncVariant.Nervana_Room_CreateByPlines) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(Polyline), typeof(Polyline2d), typeof (Polyline3d) }, "Выберите замкнутые полилинии ");
             else if (mode == RoomFuncVariant.Nervana_Room_LinkWalls) 
@@ -79,7 +79,7 @@ namespace NervanaNcBIMsMgd.Functions
                 case RoomFuncVariant.Nervana_Room_CopyObjectsTo:
                     for_CopyObjectsToRooms();
                     break;
-                case RoomFuncVariant.Nervana_Room_CreteByFloors:
+                case RoomFuncVariant.Nervana_Room_CreateByFloors:
                     for_Floor2Rooms();
                     break;
                 case RoomFuncVariant.Nervana_Room_ToFloors:

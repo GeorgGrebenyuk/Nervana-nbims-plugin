@@ -61,7 +61,7 @@ namespace NervanaNcBIMsMgd
         [CommandMethod("Nervana_Room_CreteByFloors")]
         public void command_Nervana_Room_CreteByFloors()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_CreteByFloors).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_CreateByFloors).Start();
         }
 
         [CommandMethod("Nervana_Room_ToFloors")]

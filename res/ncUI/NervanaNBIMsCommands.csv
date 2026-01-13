@@ -5,7 +5,7 @@
 Авто-контур,Nervana_Room_CreateByAutoContour,Автоматически определяет контур для выбранной точки и строит помещение,Помещения,LargeWithText,
 Расставить в помещениях,Nervana_Room_CopyObjectsTo,Копирование выбранных объектов в каждое из заданных помещений,Помещения,SmallWithoutText,
 Перекрытия по помещениям,Nervana_Room_ToFloors,Создает перекрытия по контуру помещения,Помещения,SmallWithoutText,
-Помещения по перекрытиям,Nervana_Room_CreteByFloors,Создает помещение по внешнему контуру перекрытия,Помещения,SmallWithoutText,
+Помещения по перекрытиям,Nervana_Room_CreateByFloors,Создает помещение по внешнему контуру перекрытия,Помещения,SmallWithoutText,
 Помещения по контурам,Nervana_Room_CreateByPlines,Создает помещения по замкнутым контурам (полилиниям),Помещения,SmallWithoutText,
 Связать стены с помещением,Nervana_Room_LinkWalls,Связывает стены с помещениями на зданном удалении от контура помещения,Помещения,SmallWithoutText,
 Связать объекты с помещением,Nervana_Room_LinkObjects,Связывает элементы с помещениями по условию их попадания в помещение,Помещения,SmallWithoutText,
