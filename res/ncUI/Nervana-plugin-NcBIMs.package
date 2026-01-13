@@ -6,27 +6,17 @@
  >
   <Components>
     <ConfigEntry
-      FileName="NervanaAllCommands.cfg"
+      FileName="NervanaNBIMsCommands.cfg"
       FileType="CFG"
     />
-    <ComponentEntry
+	<ComponentEntry
         AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaCommonMgd.dll"
+        ModuleName="net6.0-windows/NervanaNcMgd.dll"
         ModuleType="MGD"
     />
 	<ComponentEntry
         AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaNcMgd.dll"
-        ModuleType="MGD"
-    />
-	<ComponentEntry
-        AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaNcComMgd.dll"
-        ModuleType="MGD"
-    />
-	<ComponentEntry
-        AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaNcBIMsMgd.dll"
+        ModuleName="net6.0-windows/NervanaNcBIMsMgd.dll"
         ModuleType="MGD"
     />
   </Components>

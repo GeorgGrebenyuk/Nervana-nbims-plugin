@@ -9,19 +9,14 @@
       FileName="NervanaNcadCOMCommands.cfg"
       FileType="CFG"
     />
-    <ComponentEntry
+	<ComponentEntry
         AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaCommonMgd.dll"
+        ModuleName="net6.0-windows/NervanaNcMgd.dll"
         ModuleType="MGD"
     />
 	<ComponentEntry
         AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaNcMgd.dll"
-        ModuleType="MGD"
-    />
-	<ComponentEntry
-        AppName="Nervana-plugin"
-        ModuleName="net6.0-windows\NervanaNcComMgd.dll"
+        ModuleName="net6.0-windows/NervanaNcComMgd.dll"
         ModuleType="MGD"
     />
   </Components>
