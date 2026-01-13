@@ -86,7 +86,8 @@ namespace NervanaNcMgd.Functions
                 if (sel_value != null && !sel_value.IsCategory && sel_value.PType == EParameter_Type.CanExplore)
                 {
                     Nervana_ExplorerSpace newWindow = new Nervana_ExplorerSpace(sel_value.Value);
-                    newWindow.Show();
+                    HostMgd.ApplicationServices.Application.ShowModalWindow(newWindow);
+                    //newWindow.Show();
                 }
                 else
                 {
