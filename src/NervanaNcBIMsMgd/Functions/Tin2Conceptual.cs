@@ -23,43 +23,157 @@ namespace NervanaNcBIMsMgd.Functions
 {
     public class ElevationImporterSettings
     {
+        public ObjectId MeshEntityId = ObjectId.Null;
+        public bool InsertAsSlabs = false;
         public double IsolinesStep = 0.5;
-        public bool UseCoordsOffset = true;
-
-        public string? SelectedSurfaceName;
-        public bool AddExternalBorder = false;
+        //public bool UseCoordsOffset = true;
+        //public bool AddExternalBorder = false;
     }
 
-    public class LandXML_SurfaceDef
+    // бывш. LandXML
+    public class TinSurfaceDef
     {
         public Dictionary<int, Point3d> Pnts { get; set; }
         public int[][] Faces { get; set; }
 
         public DelaunayTriangulation.Triangle[] Triangles { get; set; }
 
-        public LandXML_SurfaceDef()
+        public TinSurfaceDef()
         {
             Pnts = new Dictionary<int, Point3d>();
             Faces = new int[][] { };
             Triangles = new DelaunayTriangulation.Triangle[] { };
         }
+
+        public double[,] ConvertTinToGrid(double step)
+        {
+            BoundingBox bbox = GetBoundingBox();
+            double stepX = step;
+            double stepY = step;
+
+            // Calculate grid dimensions
+            int cols = (int)Math.Ceiling((bbox.MaxX - bbox.MinX) / stepX) + 1;
+            int rows = (int)Math.Ceiling((bbox.MaxY - bbox.MinY) / stepY) + 1;
+            var grid = new double[rows, cols];
+
+            // Precompute triangle bounding boxes for faster lookup
+            var triBounds = new (double minx, double maxx, double miny, double maxy)[Faces.Length];
+            for (int i = 0; i < Faces.Length; i++)
+            {
+                var tri = Faces[i];
+                double minx = double.MaxValue, maxx = double.MinValue,
+                       miny = double.MaxValue, maxy = double.MinValue;
+                for (int j = 0; j < 3; j++)
+                {
+                    var pt = Pnts[tri[j]];
+                    minx = Math.Min(minx, pt.X);
+                    maxx = Math.Max(maxx, pt.X);
+                    miny = Math.Min(miny, pt.Y);
+                    maxy = Math.Max(maxy, pt.Y);
+                }
+                triBounds[i] = (minx, maxx, miny, maxy);
+            }
+
+            // Iterate over each grid point
+            for (int i = 0; i < rows; i++)
+            {
+                double y = bbox.MinY + i * stepY;
+                for (int j = 0; j < cols; j++)
+                {
+                    double x = bbox.MinX + j * stepX;
+
+                    // Find containing triangle
+                    double z = double.NaN;
+                    for (int tIdx = 0; tIdx < Faces.Length; tIdx++)
+                    {
+                        var bounds = triBounds[tIdx];
+                        if (x < bounds.minx || x > bounds.maxx || y < bounds.miny || y > bounds.maxy) continue;
+
+                        var tri = Faces[tIdx];
+                        var v0 = Pnts[tri[0]]; // Triangle vertex 0
+                        var v1 = Pnts[tri[1]]; // Triangle vertex 1
+                        var v2 = Pnts[tri[2]]; // Triangle vertex 2
+
+                        // Compute barycentric coordinates
+                        double denominator = (v1.Y - v2.Y) * (v0.X - v2.X) + (v2.X - v1.X) * (v0.Y - v2.Y);
+                        double a = ((v1.Y - v2.Y) * (x - v2.X) + (v2.X - v1.X) * (y - v2.Y)) / denominator;
+                        double b = ((v2.Y - v0.Y) * (x - v2.X) + (v0.X - v2.X) * (y - v2.Y)) / denominator;
+                        double c = 1 - a - b;
+
+                        // Check if point is inside triangle
+                        if (a >= 0 && b >= 0 && c >= 0)
+                        {
+                            z = a * v0.Z + b * v1.Z + c * v2.Z; // Interpolate Z
+                            break;
+                        }
+                    }
+                    grid[i, j] = z;
+                }
+            }
+            return grid;
+        }
+
+        public BoundingBox GetBoundingBox()
+        {
+            if (mBBOX == null)
+            {
+                double minX, maxX, minY, maxY, minZ, maxZ;
+                double[] xCoords = Pnts.Values.Select(p => p.X).ToArray();
+                double[] yCoords = Pnts.Values.Select(p => p.Y).ToArray();
+                double[] zCoords = Pnts.Values.Select(p => p.Z).ToArray();
+
+                minX = xCoords.Min();
+                minY = yCoords.Min();
+                minZ = zCoords.Min();
+                maxX = xCoords.Max();
+                maxY = yCoords.Max();
+                maxZ = zCoords.Max();
+
+                mBBOX = new BoundingBox()
+                {
+                    MinX = minX,
+                    MinY = minY,
+                    MinZ = minZ,
+                    MaxX = maxX,
+                    MaxY = maxY,
+                    MaxZ = maxZ
+                };
+            }
+            return mBBOX;
+        }
+        private BoundingBox? mBBOX;
     }
 
-    internal class ElevationImporter
+    internal class Tin2Conceptual
     {
-        public ElevationImporter()
+        public Tin2Conceptual()
         {
             this.pBuildingTransformInfo = CommonUtils.CurrentDoc.Database.SummaryInfo.GetTransformPararameters();
             this.pAngleSinus = Math.Sin(this.pBuildingTransformInfo.AngleRad);
             this.pAngleCos = Math.Cos(this.pBuildingTransformInfo.AngleRad);
 
             TraceWriter.Log($"pBuildingTransformInfo {pBuildingTransformInfo.ToString()}");
-            readSubDMesh();
+        }
 
-            double? pIsolineSteps2 = UserInput.GetUserInput("Укажите шаг горизонталей", 0.5);
-            if (pIsolineSteps2 != null && pIsolineSteps2.Value > 0) this.pIsolineSteps = pIsolineSteps2.Value;
+        public ElevationImporterSettings InitSettings()
+        {
+            ElevationImporterSettings settings = new ElevationImporterSettings();
+            // Выбрать в модели сеть
+            Editor ed = CommonUtils.CurrentDoc.Editor;
 
+            PromptEntityOptions entSelectionSettings = new PromptEntityOptions("Выберите сеть");
+            entSelectionSettings.AddAllowedClass(typeof(SubDMesh), true);
 
+            PromptEntityResult entSelection = ed.GetEntity(entSelectionSettings);
+            if (entSelection.Status == PromptStatus.OK) settings.MeshEntityId = entSelection.ObjectId;
+
+            // Задать шаг расчета горизонталей
+            settings.IsolinesStep = UserInput.GetUserInput("Укажите шаг горизонталей", 0.5);
+
+            // В виде чего вставлять?
+            settings.InsertAsSlabs = UserInput.GetUserInput("Вставлять в виде перекрытий (1) или солидов (0)?", false);
+
+            return settings;
         }
 
 
@@ -76,41 +190,33 @@ namespace NervanaNcBIMsMgd.Functions
             return new Point3d(x, y, z);
         }
 
-        private void readSubDMesh()
+        private void readSubDMesh(ObjectId meshId)
         {
-            // Выбрать в модели сеть
-            Editor ed = CommonUtils.CurrentDoc.Editor;
-
-            PromptEntityOptions entSelectionSettings = new PromptEntityOptions("Выберите сеть");
-            entSelectionSettings.AddAllowedClass(typeof(SubDMesh), true);
-
-            PromptEntityResult entSelection = ed.GetEntity(entSelectionSettings);
-            if (entSelection.Status != PromptStatus.OK) return;
-
+            if (meshId.IsNull) return;
+            
             using (Transaction tr = CommonUtils.CurrentDoc.Database.TransactionManager.StartTransaction())
             {
-                SubDMesh? meshEntity = tr.GetObject(entSelection.ObjectId, OpenMode.ForRead) as SubDMesh;
+                SubDMesh? meshEntity = tr.GetObject(meshId, OpenMode.ForRead) as SubDMesh;
                 if (meshEntity == null) return;
 
                 TraceWriter.Log($"SubDMesh Vertices {meshEntity.NumberOfVertices}");
                 TraceWriter.Log($"SubDMesh Faces {meshEntity.NumberOfFaces}");
                 TraceWriter.Log($"SubDMesh Faces2 {meshEntity.FaceArray.Count}");
 
-                this.mLandXML_Surface = new LandXML_SurfaceDef();
+                this.mLandXML_Surface = new TinSurfaceDef();
                 
-
                 for (int vertexIndex = 0; vertexIndex < meshEntity.NumberOfVertices; vertexIndex++)
                 {
                     this.mLandXML_Surface.Pnts.Add(vertexIndex, ReCalcPoint(meshEntity.Vertices[vertexIndex]));
                 }
 
-                //this.mLandXML_Surface.Faces = new int[meshEntity.NumberOfFaces][];
+                this.mLandXML_Surface.Faces = new int[meshEntity.NumberOfFaces][];
                 this.mLandXML_Surface.Triangles = new DelaunayTriangulation.Triangle[meshEntity.NumberOfFaces];
                 for (int faceIndex = 0; faceIndex < meshEntity.NumberOfFaces; faceIndex++)
                 {
                     int faceIndex2 = faceIndex * 4;
                     int[] faceIndices = new int[] { meshEntity.FaceArray[faceIndex2 + 1] , meshEntity.FaceArray[faceIndex2 + 2], meshEntity.FaceArray[faceIndex2 + 3] };
-                    //this.mLandXML_Surface.Faces[faceIndex] = faceIndices;
+                    this.mLandXML_Surface.Faces[faceIndex] = faceIndices;
 
                     DelaunayTriangulation.Triangle trg =
                        new DelaunayTriangulation.Triangle(
@@ -119,42 +225,19 @@ namespace NervanaNcBIMsMgd.Functions
 
                     //TraceWriter.Log($"Triangle {trg.ToString()}");
                 }
-
                 TraceWriter.Log($"Triangles Length {this.mLandXML_Surface.Triangles.Length}");
             }
         }
 
-        public void Import(ElevationImporterSettings settings, bool asBuildingSlabs = true)
+
+
+        public void Import(ElevationImporterSettings settings)
         {
+            readSubDMesh(settings.MeshEntityId);
+
             if (mLandXML_Surface == null) return;
 
             var allZ = mLandXML_Surface.Pnts.Values.Select(p => p.Z).ToList();
-
-            // Если выбрана опция генерации доп. контура, то нужно пересчитать триангуляцию с учетом новых точек контура
-            if (settings.AddExternalBorder)
-            {
-                var existedSurfaceVertices = mLandXML_Surface.Pnts.Values.Cast<Point3d>().ToList();
-
-                var allX0 = existedSurfaceVertices.Select(p => p.X);
-                var allY0 = existedSurfaceVertices.Select(p => p.Y);
-                var allZ0 = existedSurfaceVertices.Select(p => p.Z);
-
-                double xMin0 = allX0.Min() - 10.0;
-                double xMax0 = allX0.Max() + 10.0;
-
-                double yMin0 = allY0.Min() - 10.0;
-                double yMax0 = allY0.Max() + 10.0;
-
-                double minZ0 = allZ0.Min() - 1.0;
-                allZ.Add(minZ0);
-
-                existedSurfaceVertices.Add(new Point3d(xMin0, yMin0, minZ0));
-                existedSurfaceVertices.Add(new Point3d(xMin0, yMax0, minZ0));
-                existedSurfaceVertices.Add(new Point3d(xMax0, yMax0, minZ0));
-                existedSurfaceVertices.Add(new Point3d(xMax0, yMin0, minZ0));
-
-                mLandXML_Surface.Triangles = DelaunayTriangulation.Triangulate(existedSurfaceVertices).ToArray();
-            }
 
             // ФОрмируем Z, для которых нужно вычислить горизонтали
             List<double> isolineLevels = new List<double>();
@@ -174,8 +257,14 @@ namespace NervanaNcBIMsMgd.Functions
             // Generate isolines
             IsolineGenerator generatorIso = new IsolineGenerator();
             var isolines = generatorIso.GenerateIsolines(mLandXML_Surface.Triangles, isolineLevels);
-            var polylines = generatorIso.ConnectSegmentsIntoPolylines(isolines);
+            var polylines = generatorIso.ConnectSegmentsIntoPolylines(isolines, 0.1);
 
+            var bbox = mLandXML_Surface.GetBoundingBox();
+            double length = new double[] {Math.Abs(bbox.MaxX - bbox.MinX), Math.Abs(bbox.MaxY - bbox.MinY) }.Max();
+            double gridStep = 1000000.0 / length / length;
+
+            //TODO: проверить иначе
+            //var contours = IsolineGenerator2.GenerateContours(mLandXML_Surface.ConvertTinToGrid(gridStep), settings.IsolinesStep); // Interval of 2 units
 
             TraceWriter.Log($"Generated {isolines.Count} contour segments");
             TraceWriter.Log($"Connected into {polylines.Count} polylines");
@@ -207,15 +296,25 @@ namespace NervanaNcBIMsMgd.Functions
 
                     List<Point3d> targetContourRaw2 = targetContourRaw.Skip(skippedPos).ToList();
 
+
+
                     List<Point2d> targetContourFlat = targetContourRaw2.Select(p => new Point2d(p.X, p.Y)).ToList();
                     if (targetContourFlat.Count < 3) continue;
+
+                    //Создадим геометрию контура
+                    var dataForPline2d = CommonTools.ConvertVerticesFromList(targetContourRaw2);
+
+                    Polyline2d tmpContourPline2d = new Polyline2d(Poly2dType.SimplePoly, dataForPline2d.Item1, targetContourRaw2.First().Z, true, 0, 0, dataForPline2d.Item2);
+
+                    acBlkTblRec.AppendEntity(tmpContourPline2d);
+                    tr.AddNewlyCreatedDBObject(tmpContourPline2d, true);
 
                     //TraceWriter.Log($"Prepare create slab {polyline_flat.Count} vertices after check");
 
                     try
                     {
                         Entity? createdFloorEntity = null;
-                        if (asBuildingSlabs)
+                        if (settings.InsertAsSlabs)
                         {
                             BuildingSlab createdFloorAsSlab = BuildingSlabFactory.Create(targetContourFlat, settings.IsolinesStep);
                             createdFloorAsSlab.TransformBy(Matrix3d.Displacement(new Vector3d(0, 0, targetContourRaw2.First().Z + 300.0) -
@@ -243,7 +342,7 @@ namespace NervanaNcBIMsMgd.Functions
                                     // Extrude the region
                                     solid.Extrude(region, settings.IsolinesStep, 0);
                                 }
-                                solid.TransformBy(Matrix3d.Displacement(new Vector3d(0, 0, targetContourRaw.First().Z + 300.0) -
+                                solid.TransformBy(Matrix3d.Displacement(new Vector3d(0, 0, targetContourRaw.First().Z) -
                            new Vector3d(0, 0, 0)));
 
                                 createdFloorEntity = solid;
@@ -277,7 +376,7 @@ namespace NervanaNcBIMsMgd.Functions
 
         private double pIsolineSteps = 0.5;
 
-        private LandXML_SurfaceDef? mLandXML_Surface;
+        private TinSurfaceDef? mLandXML_Surface;
         public bool IsXml = false;
         private ProjectTransformPararameters pBuildingTransformInfo;
     }

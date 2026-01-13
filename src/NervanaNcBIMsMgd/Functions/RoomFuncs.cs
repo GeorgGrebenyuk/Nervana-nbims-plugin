@@ -21,13 +21,13 @@ namespace NervanaNcBIMsMgd.Functions
 {
     enum RoomFuncVariant
     {
-        Nervana_PlaceRoomInContour,
-        Nervana_CopyObjectsToRoom,
-        Nervana_Room2Floor,
-        Nervana_Floor2Room,
-        Nervana_Polylines2Room,
-        Nervana_LinkWallsToRoom,
-        Nervana_LinkObjectsToRoom,
+        Nervana_Room_CreateByAutoContour,
+        Nervana_Room_CopyObjectsTo,
+        Nervana_Room_ToFloors,
+        Nervana_Room_CreteByFloors,
+        Nervana_Room_CreateByPlines,
+        Nervana_Room_LinkWalls,
+        Nervana_Room_LinkObjects,
 
     }
     internal class RoomFuncs
@@ -47,20 +47,20 @@ namespace NervanaNcBIMsMgd.Functions
         {
             RoomFuncs func = new RoomFuncs(mode);
 
-            if (mode == RoomFuncVariant.Nervana_CopyObjectsToRoom)
+            if (mode == RoomFuncVariant.Nervana_Room_CopyObjectsTo)
             {
                 func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(ParametricEntity) }, "Выберите параметрические объекты для копирования ");
                 func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             }
-            else if (mode == RoomFuncVariant.Nervana_Floor2Room) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingSlab) }, "Выберите перекрытия ");
-            else if (mode == RoomFuncVariant.Nervana_Room2Floor) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
-            else if (mode == RoomFuncVariant.Nervana_Polylines2Room) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(Polyline), typeof(Polyline2d), typeof (Polyline3d) }, "Выберите замкнутые полилинии ");
-            else if (mode == RoomFuncVariant.Nervana_LinkWallsToRoom) 
+            else if (mode == RoomFuncVariant.Nervana_Room_CreteByFloors) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(BuildingSlab) }, "Выберите перекрытия ");
+            else if (mode == RoomFuncVariant.Nervana_Room_ToFloors) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
+            else if (mode == RoomFuncVariant.Nervana_Room_CreateByPlines) func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(Polyline), typeof(Polyline2d), typeof (Polyline3d) }, "Выберите замкнутые полилинии ");
+            else if (mode == RoomFuncVariant.Nervana_Room_LinkWalls) 
             {
                 func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(LinearBuildingWall ) }, "Выберите стены ");
                 func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
             }
-            else if (mode == RoomFuncVariant.Nervana_LinkObjectsToRoom)
+            else if (mode == RoomFuncVariant.Nervana_Room_LinkObjects)
             {
                 func._sourceObjects1 = Utils.SelectObjectsByTypes(new Type[] { typeof(ParametricEntity) }, "Выберите параметрические объекты ");
                 func._sourceObjects2 = Utils.SelectObjectsByTypes(new Type[] { typeof(SpaceEntity) }, "Выберите помещения ");
@@ -73,23 +73,23 @@ namespace NervanaNcBIMsMgd.Functions
         {
             switch (this._funcMode)
             {
-                case RoomFuncVariant.Nervana_PlaceRoomInContour:
+                case RoomFuncVariant.Nervana_Room_CreateByAutoContour:
                     for_PlaceRoomInContour();
                     break;
-                case RoomFuncVariant.Nervana_CopyObjectsToRoom:
+                case RoomFuncVariant.Nervana_Room_CopyObjectsTo:
                     for_CopyObjectsToRooms();
                     break;
-                case RoomFuncVariant.Nervana_Floor2Room:
+                case RoomFuncVariant.Nervana_Room_CreteByFloors:
                     for_Floor2Rooms();
                     break;
-                case RoomFuncVariant.Nervana_Room2Floor:
+                case RoomFuncVariant.Nervana_Room_ToFloors:
                     for_Rooms2Floors();
                     break;
-                case RoomFuncVariant.Nervana_Polylines2Room:
+                case RoomFuncVariant.Nervana_Room_CreateByPlines:
                     for_Contours2Rooms();
                     break;
-                case RoomFuncVariant.Nervana_LinkWallsToRoom:
-                case RoomFuncVariant.Nervana_LinkObjectsToRoom:
+                case RoomFuncVariant.Nervana_Room_LinkWalls:
+                case RoomFuncVariant.Nervana_Room_LinkObjects:
                     for_LinkObjectsWithRoom();
                     break;
             }
@@ -236,7 +236,7 @@ namespace NervanaNcBIMsMgd.Functions
 
             double trimmedPline = 800.0;
 
-            if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
+            if (this._funcMode == RoomFuncVariant.Nervana_Room_LinkWalls)
             {
                 trimmedPline = UserInput.GetUserInput("Величина смещения для анализируемого контура помещения", 800.0);
             }
@@ -253,7 +253,7 @@ namespace NervanaNcBIMsMgd.Functions
                     spaceGeometry.ObjectId = spaceEntInstance.ObjectId;
                     spaceGeometry.GeometryType = GeometryVariant.Contour;
                     spaceGeometry.Geometry = spaceEntInstance.GetBoundary();
-                    if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
+                    if (this._funcMode == RoomFuncVariant.Nervana_Room_LinkWalls)
                     {
                         ContourTools ct = new ContourTools(spaceEntInstance.GetBoundary());
                         var offs = ct.OffsetTo(trimmedPline);
@@ -270,7 +270,7 @@ namespace NervanaNcBIMsMgd.Functions
                 int tructPartEntCounter = 0;
                 foreach (ObjectId entId in this._sourceObjects1)
                 {
-                    if (this._funcMode == RoomFuncVariant.Nervana_LinkObjectsToRoom)
+                    if (this._funcMode == RoomFuncVariant.Nervana_Room_LinkObjects)
                     {
                         ParametricEntity? ParametricEntityInstance = tr.GetObject(entId, OpenMode.ForRead) as ParametricEntity;
                         if (ParametricEntityInstance == null) continue;
@@ -283,7 +283,7 @@ namespace NervanaNcBIMsMgd.Functions
                         tmpAnalyzedEntities[tructPartEntCounter] = ParametricEntityGeometry;
                         tructPartEntCounter++;
                     }
-                    else if (this._funcMode == RoomFuncVariant.Nervana_LinkWallsToRoom)
+                    else if (this._funcMode == RoomFuncVariant.Nervana_Room_LinkWalls)
                     {
                         LinearBuildingWall ? wallBaseInstance = tr.GetObject(entId, OpenMode.ForRead) as LinearBuildingWall ;
                         if (wallBaseInstance == null) continue;

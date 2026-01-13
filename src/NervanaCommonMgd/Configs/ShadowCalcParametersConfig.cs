@@ -8,7 +8,7 @@ namespace NervanaCommonMgd.Configs
 {
     public class ShadowCalcParametersConfig : IConfigBase
     {
-        public string Name { get; set; } = "Средние параметры для г. Москва";
+        public string Name { get; set; } = "Усредненные параметры для г. Москва";
         public double Latitude { get; set; } = 55.6984;
         public double Longitude { get; set; } = 37.6055;
         public int TimeZoneOffset { get; set; } = 0;

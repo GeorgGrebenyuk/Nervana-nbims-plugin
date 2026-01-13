@@ -49,37 +49,37 @@ namespace NervanaNcMgd
         }
 
         [CommandMethod("Nervana_MgdExplorerReflectionApplication")]
-        public void command_1()
+        public void command_MgdExplorerReflectionApplication()
         {
             RunExplorer(MgdMode.Application);
         }
 
         [CommandMethod("Nervana_MgdExplorerReflectionDocuments")]
-        public void command_2()
+        public void command_MgdExplorerReflectionDocuments()
         {
             RunExplorer(MgdMode.Documents);
         }
 
         [CommandMethod("Nervana_MgdExplorerReflectionDocument")]
-        public void command_3()
+        public void command_MgdExplorerReflectionDocument()
         {
             RunExplorer(MgdMode.Document);
         }
 
         [CommandMethod("Nervana_MgdExplorerReflectionDatabase")]
-        public void command_4()
+        public void command_MgdExplorerReflectionDatabase()
         {
             RunExplorer(MgdMode.Database);
         }
 
         [CommandMethod("Nervana_MgdExplorerReflectionEntities", CommandFlags.UsePickSet)]
-        public void command_5()
+        public void command_MgdExplorerReflectionEntities()
         {
             RunExplorer(MgdMode.Objects);
         }
 
         [CommandMethod("Nervana_MgdExplorerReflectionEntities2", CommandFlags.UsePickSet)]
-        public void command_6()
+        public void command_MgdExplorerReflectionEntities2()
         {
             RunExplorer(MgdMode.Objects2);
         }

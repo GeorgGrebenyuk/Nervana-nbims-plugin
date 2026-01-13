@@ -20,6 +20,16 @@ namespace NervanaNcBIMsMgd
 
     public class Loader : IExtensionApplication
     {
+        public void Initialize()
+        {
+
+        }
+
+        public void Terminate()
+        {
+
+        }
+
 #if DEBUG
         [CommandMethod("Nervana_ParametersEditor", CommandFlags.Redraw | CommandFlags.UsePickSet)]
         public void command_Nervana_ParametersEditor()
@@ -36,76 +46,58 @@ namespace NervanaNcBIMsMgd
 
         #region Команды в группе "Помещения"
 
-        [CommandMethod("Nervana_CopyObjectsToRoom")]
-        public void command_Rooms_CopyObjectsToRoom()
+        [CommandMethod("Nervana_Room_CreateByAutoContour")]
+        public void command_Nervana_Room_CreateByAutoContour()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_CopyObjectsToRoom).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_CreateByAutoContour).Start();
         }
 
-        [CommandMethod("Nervana_Room2Floor")]
-        public void command_Rooms_Room2Floor()
+        [CommandMethod("Nervana_Room_CopyObjectsTo")]
+        public void command_Nervana_Room_CopyObjectsTo()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room2Floor).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_CopyObjectsTo).Start();
         }
 
-        [CommandMethod("Nervana_Floor2Room")]
-        public void command_Rooms_Floor2Room()
+        [CommandMethod("Nervana_Room_CreteByFloors")]
+        public void command_Nervana_Room_CreteByFloors()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Floor2Room).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_CreteByFloors).Start();
         }
 
-        [CommandMethod("Nervana_Polylines2Room")]
-        public void command_Rooms_Polylines2Room()
+        [CommandMethod("Nervana_Room_ToFloors")]
+        public void command_Nervana_Room_ToFloors()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Polylines2Room).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_ToFloors).Start();
         }
 
-        [CommandMethod("Nervana_LinkWallsToRoom")]
-        public void command_Rooms_LinkWallsToRoom()
+        [CommandMethod("Nervana_Room_CreateByPlines")]
+        public void command_Nervana_Room_CreateByPlines()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_LinkWallsToRoom).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_CreateByPlines).Start();
         }
 
-        [CommandMethod("Nervana_LinkObjectsToRoom")]
-        public void command_Rooms_LinkObjectsToRoom()
+        [CommandMethod("Nervana_Room_LinkWalls")]
+        public void command_Nervana_Room_LinkWalls()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_LinkObjectsToRoom).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_LinkWalls).Start();
         }
 
-        [CommandMethod("Nervana_PlaceRoomInContour")]
-        public void command_Nervana_PlaceRoomInContour()
+        [CommandMethod("Nervana_Room_LinkObjects")]
+        public void command_Nervana_Room_LinkObjects()
         {
-            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_PlaceRoomInContour).Start();
+            RoomFuncs.CreateFor(RoomFuncVariant.Nervana_Room_LinkObjects).Start();
         }
+
+        
         #endregion
 
         #region Команды в группе "Утилиты"
         [CommandMethod("Nervana_MakeElevationConceptual")]
         public void command_Nervana_MakeElevationConceptual()
         {
-            ElevationImporter func = new ElevationImporter();
-            ElevationImporterSettings sett = new ElevationImporterSettings();
+            Tin2Conceptual func = new Tin2Conceptual();
+            ElevationImporterSettings sett = func.InitSettings();
             func.Import(sett);
-        }
-
-        #endregion
-
-
-        public void Initialize()
-        {
-            
-        }
-
-        public void Terminate()
-        {
-            
-        }
-
-        [CommandMethod("Nervana_AssemblyRefsExplorer")]
-        public void command_Nervana_AssemblyRefsExplorer()
-        {
-            //NervanaUI_PaletteManager.CreatePalette(PaletteType.AssemblyRefsExplorer);
-            NervanaUI_PaletteManager2.CreatePalette();
         }
 
         [CommandMethod("Nervana_OpeningsPlacer")]
@@ -116,12 +108,28 @@ namespace NervanaNcBIMsMgd
             func.Start();
         }
 
+        [CommandMethod("Nervana_AssemblyRefsExplorer")]
+        public void command_Nervana_AssemblyRefsExplorer()
+        {
+            NervanaUI_PaletteManager.CreatePalette(PaletteType.AssemblyRefsExplorer);
+        }
+
+        #endregion
+
+
+        #region Команды в группе "Аналитика"
         [CommandMethod("Nervana_Analytic_ShadowsBySunCreator")]
         public void command_Nervana_Analytic_ShadowsBySunCreator()
         {
             ShadowsBySunCreator func = new ShadowsBySunCreator();
-            func.Start(new NervanaCommonMgd.Configs.ShadowCalcParametersConfig());
+            ShadowCalcParametersConfig settings = func.InitParameters();
+            func.Start(settings);
         }
+        #endregion
+
+
+
+
 
         #region Команды для курса по API
 

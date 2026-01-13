@@ -16,7 +16,7 @@ namespace NervanaNcBIMsMgd
         AssemblyRefsExplorer
     }
 
-    class NervanaUI_PaletteDef
+    struct NervanaUI_PaletteDef
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -24,87 +24,67 @@ namespace NervanaNcBIMsMgd
         public string Name_Palette { get; set; }
         public string Caption { get; set; }
 
-        public UserControl? Control { get; set; }
-
-        public static NervanaUI_PaletteDef Create_AssemblyRefsExplorer()
+        public static NervanaUI_PaletteDef CreateDefault()
         {
-            return new NervanaUI_PaletteDef()
-            {
-#if DEBUG
-                Id = Guid.Parse("{24e95c1c-838f-48e2-a16a-4fb8c56ca436}"),
-                 //Id = Guid.NewGuid(),
-#else
-                Id = Guid.Parse("{24e95c1c-838f-48e2-a16a-4fb8c56ca436}"),
-#endif
-                Name = "Nervana_AssemblyRefsExplorer",
-                Name_Palette = "Nervana_AssemblyRefsExplorer_Palette",
-                Caption = "Обозреватель конструктивных сборок",
-                Control = new Nervana_AssemblyRefsExplorer()
-            };
+            NervanaUI_PaletteDef paletteDef = new NervanaUI_PaletteDef();
+            paletteDef.Id = Guid.Empty;
+            paletteDef.Name = "";
+            paletteDef.Name_Palette = "";
+            paletteDef.Caption = "";
+
+            return paletteDef;
         }
     }
 
 
     internal class NervanaUI_PaletteManager
     {
-        static Dictionary<PaletteType, HostMgd.Windows.PaletteSet>? mPalettes;
+        private static HostMgd.Windows.PaletteSet? mPalette_AssemblyRefsExplorer;
 
-        public static void CreatePalette(PaletteType palType)
+        public static void CreatePalette(PaletteType paletteType)
         {
-            if (mPalettes == null) mPalettes = new Dictionary<PaletteType, HostMgd.Windows.PaletteSet>();
-            if (!mPalettes.ContainsKey(palType))
+            switch (paletteType)
             {
-                if (palType == PaletteType.AssemblyRefsExplorer)
-                {
-                    mPalettes[palType] = CreatePalette2(NervanaUI_PaletteDef.Create_AssemblyRefsExplorer());
-                }
+                case PaletteType.AssemblyRefsExplorer:
+                    if (mPalette_AssemblyRefsExplorer == null) mPalette_AssemblyRefsExplorer = createPalette2(createPaletteParameters(paletteType), new Nervana_AssemblyRefsExplorer());
+                    if (mPalette_AssemblyRefsExplorer != null) mPalette_AssemblyRefsExplorer.Visible = true;
+                    break;
             }
-            else if (mPalettes[palType] != null) mPalettes[palType].Visible = true;
         }
 
-        private static HostMgd.Windows.PaletteSet CreatePalette2(NervanaUI_PaletteDef paletteDef)
+        private static NervanaUI_PaletteDef createPaletteParameters(PaletteType paletteType)
         {
-            HostMgd.Windows.PaletteSet psSet = new HostMgd.Windows.PaletteSet(paletteDef.Name, paletteDef.Name_Palette, paletteDef.Id);
+            NervanaUI_PaletteDef paletteDef = NervanaUI_PaletteDef.CreateDefault();
+            switch(paletteType)
+            {
+                case PaletteType.AssemblyRefsExplorer:
+                    paletteDef = new NervanaUI_PaletteDef()
+                    {
+                        Id = Guid.Parse("{24e95c1c-838f-48e2-a16a-4fb8c56ca436}"),
+                        Name = "Nervana_AssemblyRefsExplorer",
+                        Name_Palette = "Nervana_AssemblyRefsExplorer_Palette",
+                        Caption = "Обозреватель конструктивных сборок"
+                    };
+                    break;
+            }
+            return paletteDef;
+        }
+
+        private static HostMgd.Windows.PaletteSet? createPalette2(NervanaUI_PaletteDef paletteDef, System.Windows.Controls.UserControl control)
+        {
+            if (paletteDef.Id == Guid.Empty) return null;
+            HostMgd.Windows.PaletteSet psSet = new HostMgd.Windows.PaletteSet(paletteDef.Caption, paletteDef.Name_Palette, paletteDef.Id);
             psSet.MinimumSize = new System.Drawing.Size(200, 300);
 
             var hostView = new ElementHost
             {
                 AutoSize = false,
                 Dock = System.Windows.Forms.DockStyle.Fill,
-                Child = paletteDef.Control
+                Child = control
             };
 
-            psSet.Add(paletteDef.Caption, hostView);
+            psSet.Add(paletteDef.Name, hostView);
             return psSet;
-        }
-
-    }
-
-    internal class NervanaUI_PaletteManager2
-    {
-        private static Guid ps_Attrs_id = Guid.Parse("{24e95c1c-838f-48e2-a16a-4fb8c56ca436}");
-        static HostMgd.Windows.PaletteSet? ps_Attrs;
-        static Nervana_AssemblyRefsExplorer? mExplorer;
-
-        public static void CreatePalette()
-        {
-            if (ps_Attrs == null)
-            {
-                var hostView = new ElementHost
-                {
-                    AutoSize = false,
-                    Dock = System.Windows.Forms.DockStyle.Fill,
-                    Child = new Nervana_AssemblyRefsExplorer()
-                };
-
-                //use constructor with Guid so that we can save/load user data
-                ps_Attrs = new HostMgd.Windows.PaletteSet("Nervana_AssemblyRefsExplorer", "Nervana_AssemblyRefsExplorer_Palette", ps_Attrs_id);
-                ps_Attrs.MinimumSize = new Size(241, 300);
-                ps_Attrs.Size = new Size(241, 300);
-                ps_Attrs.Add("Обозреватель конструктивных сборок", hostView);
-            }
-
-            ps_Attrs.Visible = true;
         }
     }
 }

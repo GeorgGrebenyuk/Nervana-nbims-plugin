@@ -22,7 +22,7 @@ namespace NervanaNcBIMsMgd.Functions
 
     public class ParametersShadowsBySunCreator
     {
-        public const string HourPerDay = "Bri4ka. Час дня (положение солнца) ";
+        public const string HourPerDay = "Час дня (положение солнца) ";
     }
 
     /// <summary>
@@ -33,6 +33,17 @@ namespace NervanaNcBIMsMgd.Functions
         public ShadowsBySunCreator()
         {
 
+        }
+
+        public ShadowCalcParametersConfig InitParameters()
+        {
+            ShadowCalcParametersConfig settings = new ShadowCalcParametersConfig();
+
+            settings.Longitude = UserInput.GetUserInput("Долгота места, десятичный вид", settings.Longitude);
+            settings.Latitude = UserInput.GetUserInput("Широта места, десятичный вид", settings.Latitude);
+            //settings.GroundElevation = UserInput.GetUserInput("Широта места, десятичный вид", settings.Latitude);
+
+            return settings;
         }
 
         public void Start(ShadowCalcParametersConfig sunParameters)
