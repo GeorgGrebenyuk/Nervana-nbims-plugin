@@ -14,5 +14,7 @@ namespace NervanaCADLibLibraryMgd
         public static Form CADLIB_MainForm;
         public static IDatabaseBrowser CADLIB_mainDBBrowser;
         public static CADLibrary CADLIB_Library;
+
+       
     }
 }

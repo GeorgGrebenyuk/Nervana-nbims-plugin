@@ -9,4 +9,4 @@
 Помещения по контурам,Nervana_Room_CreateByPlines,Создает помещения по замкнутым контурам (полилиниям),Помещения,SmallWithoutText,
 Связать стены с помещением,Nervana_Room_LinkWalls,Связывает стены с помещениями на зданном удалении от контура помещения,Помещения,SmallWithoutText,
 Связать объекты с помещением,Nervana_Room_LinkObjects,Связывает элементы с помещениями по условию их попадания в помещение,Помещения,SmallWithoutText,
-Построить тени,Nervana_Analytic_ShadowsBySunCreator,Рассчитывает затенение от объектов модели от заданного положения Солнца,Аналитика,SmallWithoutText,
+Построить тени от Солнца,Nervana_Analytic_ShadowsBySunCreator,Рассчитывает затенение от объектов модели от заданного положения Солнца,Аналитика,SmallWithoutText,

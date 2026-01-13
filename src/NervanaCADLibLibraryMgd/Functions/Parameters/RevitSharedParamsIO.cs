@@ -38,7 +38,7 @@ namespace NervanaCADLibLibraryMgd.Functions.Parameters
             //{
             //    revitSFPpath = openFileDialog.FileName;
             //}
-            revitSFPpath = @"E:\DataTest\Разное\Alla\ГП_Площадка ЗИФ.ifc.sharedparameters.txt";
+            //revitSFPpath = @"E:\DataTest\Разное\Alla\ГП_Площадка ЗИФ.ifc.sharedparameters.txt";
 
 #if DEBUG
             
