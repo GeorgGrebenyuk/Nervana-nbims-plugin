@@ -16,7 +16,7 @@
 
 * для вертикальных приложения ModelStudio CS, nanoCAD BIM Строительство (взаимодействие с COM API) -- перечень функций [тут](./res/ncUI/NervanaNcadCOMCommands.csv);
 
-* для .NET API nanoCAD BIM Строительство (25.0) -- перечень функций [тут](./res/ncUI/NervanaAllCommands.csv);
+* для .NET API nanoCAD BIM Строительство (25.0) -- перечень функций [тут](./res/ncUI/NervanaNBIMsCommands.csv);
 
 * для CADLib (компонент МБСК);
 
